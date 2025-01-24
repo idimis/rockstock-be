@@ -26,10 +26,10 @@ public class ProductCategory {
     private Long id;
 
     @NotNull
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String categoryName;
 
-    @Column(length = 255)
+    @Column(name = "category_picture")
     private String categoryPicture;
 
     @Column(name = "deleted_at")

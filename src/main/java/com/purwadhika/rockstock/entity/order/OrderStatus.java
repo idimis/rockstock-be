@@ -27,11 +27,11 @@ public class OrderStatus {
     private Long id;
 
     @NotNull
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String status;
 
     @NotNull
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String detail;
 
     @Column(name = "deleted_at")

@@ -27,19 +27,19 @@ public class Warehouse {
     private Long id;
 
     @NotNull
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String name;
 
     @NotNull
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String address;
 
     @NotNull
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String longitude;
 
     @NotNull
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String latitude;
 
     @Column(name = "deleted_at")

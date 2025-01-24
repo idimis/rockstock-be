@@ -93,7 +93,7 @@ public class User {
 
     // Relationships
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_provider_id", referencedColumnName = "user_provider_id", nullable = true)
+    @JoinColumn(name = "user_provider_id", referencedColumnName = "user_provider_id")
     private UserProvider userProvider;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
