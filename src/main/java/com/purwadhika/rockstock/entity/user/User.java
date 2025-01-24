@@ -1,0 +1,119 @@
+package com.purwadhika.rockstock.entity.user;
+
+import com.purwadhika.rockstock.entity.cart.Cart;
+import com.purwadhika.rockstock.entity.order.Order;
+import com.purwadhika.rockstock.entity.warehouse.WarehouseAdmin;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
+
+import javax.management.relation.Role;
+import java.time.OffsetDateTime;
+import java.util.HashSet;
+import java.util.Set;
+
+@Entity
+@Table(name = "users", schema = "rockstock")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_gen")
+    @SequenceGenerator(name = "user_id_gen", sequenceName = "user_id_seq", schema = "rockstock", allocationSize = 1)
+    @Column(name = "user_id", nullable = false)
+    private Long id;
+
+    @NotNull(message = "Fullname is mandatory")
+    @Size(max = 100, message = "Fullname can have at most 100 characters")
+    @Column(nullable = false, length = 100)
+    private String fullname;
+
+    @NotNull(message = "Email is mandatory")
+    @Email(message = "Email should be valid")
+    @Column(nullable = false, unique = true, length = 100)
+    private String email;
+
+    @NotNull(message = "Password is mandatory")
+    @Size(min = 6, message = "Password must be at least 6 characters")
+    @Column(nullable = false)
+    private String password;
+
+    @Column(name = "profile_picture_url")
+    private String photoProfileUrl;
+
+    @Column(name = "birth_date")
+    private OffsetDateTime birthDate;
+
+    @Size(max = 10, message = "Gender can have at most 10 characters")
+    @Column(length = 10)
+    private String gender;
+
+    @NotNull
+    @ColumnDefault("false")
+    @Column(name = "is_verified", nullable = false)
+    private Boolean isVerified = false;
+
+    @NotNull
+    @ColumnDefault("CURRENT_TIMESTAMP")
+    @Column(name = "created_at", nullable = false)
+    private OffsetDateTime createdAt;
+
+    @NotNull
+    @ColumnDefault("CURRENT_TIMESTAMP")
+    @Column(name = "updated_at", nullable = false)
+    private OffsetDateTime updatedAt;
+
+    @Column(name = "deleted_at")
+    private OffsetDateTime deletedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = OffsetDateTime.now();
+        updatedAt = OffsetDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = OffsetDateTime.now();
+    }
+
+    @PreRemove
+    protected void onRemove() {
+        deletedAt = OffsetDateTime.now();
+    }
+
+    // Relationships
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_provider_id", referencedColumnName = "user_provider_id", nullable = true)
+    private UserProvider userProvider;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Address> addresses = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<WarehouseAdmin> warehouseAdmins = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Cart> carts = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Order> orders = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "role_id")
+    )
+    private Set<Role> roles = new HashSet<>();
+
+}
