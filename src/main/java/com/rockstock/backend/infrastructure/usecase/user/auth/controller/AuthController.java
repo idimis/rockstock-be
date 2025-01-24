@@ -3,6 +3,7 @@ package com.rockstock.backend.infrastructure.usecase.user.auth.controller;
 import com.rockstock.backend.common.response.ApiResponse;
 import com.rockstock.backend.infrastructure.usecase.user.auth.dto.*;
 import com.rockstock.backend.infrastructure.usecase.user.auth.service.AuthService;
+import com.rockstock.backend.infrastructure.usecase.user.auth.service.EmailVerificationService; // Import service baru
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -15,6 +16,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
+    private final EmailVerificationService emailVerificationService; // Dependency injection untuk EmailVerificationService
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDTO req) {
@@ -25,6 +27,10 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequestDTO req) {
         authService.register(req);
+
+        // Setelah registrasi sukses, kirimkan email verifikasi
+        emailVerificationService.sendVerificationEmail(req.getEmail());
+
         return ApiResponse.successfulResponse("Registration successful. Please verify your email to activate your account.");
     }
 
