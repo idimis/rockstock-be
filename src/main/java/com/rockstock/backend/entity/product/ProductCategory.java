@@ -1,4 +1,4 @@
-package com.purwadhika.rockstock.entity.product;
+package com.rockstock.backend.entity.product;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -23,7 +23,7 @@ public class ProductCategory {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_category_id_gen")
     @SequenceGenerator(name = "product_category_id_gen", sequenceName = "product_category_id_seq", allocationSize = 1)
     @Column(name = "product_category_id", nullable = false)
-    private Long id;
+    private Long categoryId;
 
     @NotNull
     @Column(nullable = false)

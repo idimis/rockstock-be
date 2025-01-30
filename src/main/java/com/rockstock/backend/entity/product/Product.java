@@ -1,4 +1,4 @@
-package com.purwadhika.rockstock.entity.product;
+package com.rockstock.backend.entity.product;
 
 import com.purwadhika.rockstock.entity.cart.CartItem;
 import com.purwadhika.rockstock.entity.order.OrderItem;
@@ -27,7 +27,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_id_gen")
     @SequenceGenerator(name = "product_id_gen", sequenceName = "product_id_seq", schema = "rockstock", allocationSize = 1)
     @Column(name = "product_id", nullable = false)
-    private Long id;
+    private Long productId;
 
     @NotNull
     @Column(name = "product_name", nullable = false)

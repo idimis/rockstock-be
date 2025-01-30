@@ -7,7 +7,7 @@ import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import com.rockstock.backend.infrastructure.system.security.JwtAuthenticationFilter;
-import com.rockstock.backend.infrastructure.usecase.user.auth.service.GetUserAuthDetailsUsecase;
+import com.rockstock.backend.usecase.user.auth.service.GetUserAuthDetailsUsecase;
 import lombok.extern.java.Log;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

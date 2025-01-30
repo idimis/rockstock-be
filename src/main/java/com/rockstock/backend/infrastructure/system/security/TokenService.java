@@ -2,7 +2,7 @@ package com.rockstock.backend.infrastructure.system.security;
 
 import com.rockstock.backend.common.exceptions.DataNotFoundException;
 import com.rockstock.backend.entity.User;
-import com.rockstock.backend.infrastructure.usecase.user.repository.UserRepository;
+import com.rockstock.backend.usecase.user.repository.UserRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
