@@ -59,15 +59,15 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
-                        // public endpoint
-                        .requestMatchers("/api/v1/signup").permitAll()
-                        .requestMatchers("/api/v1/login").permitAll()
-                        .requestMatchers("/api/v1/events/**").permitAll()
-                        .requestMatchers("/api/v1/reviews/**").permitAll()
-                        .requestMatchers("/api/v1/vouchers/**").permitAll()
-                        .requestMatchers("/api/v1/locations").permitAll()
-                        .requestMatchers("/api/v1/users/**").permitAll()
-                        // private endpoint
+                        // public endpoints
+                        .requestMatchers("/api/v1/auth/signup").permitAll()
+                        .requestMatchers("/api/v1/auth/login").permitAll()
+                        .requestMatchers("/api/v1/auth/google/login").permitAll()
+                        .requestMatchers("/api/v1/auth/verify").permitAll()
+                        .requestMatchers("/api/v1/auth/forgot-password").permitAll()
+                        .requestMatchers("/api/v1/auth/reset-password").permitAll()
+                        .requestMatchers("/api/v1/auth/verify-email").permitAll()
+                        // private endpoints
                         .anyRequest().authenticated()
                 )
                 .addFilter(new JwtAuthenticationFilter(authManager(), jwtDecoder));

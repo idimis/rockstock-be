@@ -1,9 +1,7 @@
 package com.rockstock.backend.infrastructure.usecase.admin.service;
 
-import com.rockstock.backend.entity.Admin;
-import com.rockstock.backend.infrastructure.usecase.admin.dto.AdminCreateRequestDTO;
-import com.rockstock.backend.infrastructure.usecase.admin.dto.AdminResponseDTO;
-import com.rockstock.backend.infrastructure.usecase.admin.dto.AdminUpdateRequestDTO;
+import com.rockstock.backend.entity.warehouse.WarehouseAdmin;
+import com.rockstock.backend.infrastructure.usecase.admin.dto.AdminUserResponse;
 import com.rockstock.backend.infrastructure.usecase.admin.repository.AdminRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,12 +20,12 @@ public class AdminService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public AdminResponseDTO createAdmin(AdminCreateRequestDTO requestDTO) {
+    public AdminUserResponse createAdmin(AdminCreateRequestDTO requestDTO) {
         if (adminRepository.existsByEmail(requestDTO.getEmail())) {
             throw new RuntimeException("Admin with this email already exists");
         }
 
-        Admin admin = new Admin();
+        WarehouseAdmin admin = new WarehouseAdmin();
         admin.setEmail(requestDTO.getEmail());
         admin.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
         admin.setRole(requestDTO.getRole());
@@ -45,7 +43,7 @@ public class AdminService {
     }
 
     public AdminResponseDTO updateAdmin(Long adminId, AdminUpdateRequestDTO requestDTO) {
-        Admin admin = adminRepository.findById(adminId)
+        WarehouseAdmin admin = adminRepository.findById(adminId)
                 .orElseThrow(() -> new RuntimeException("Admin not found"));
 
         if (requestDTO.getEmail() != null) {
@@ -71,7 +69,7 @@ public class AdminService {
         adminRepository.deleteById(adminId);
     }
 
-    private AdminResponseDTO mapToResponseDTO(Admin admin) {
+    private AdminResponseDTO mapToResponseDTO(WarehouseAdmin admin) {
         AdminResponseDTO responseDTO = new AdminResponseDTO();
         responseDTO.setId(admin.getId());
         responseDTO.setEmail(admin.getEmail());

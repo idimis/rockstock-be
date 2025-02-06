@@ -1,4 +1,4 @@
-package com.purwadhika.rockstock.entity.geolocation;
+package com.rockstock.backend.entity.geolocation;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

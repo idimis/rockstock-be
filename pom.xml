@@ -67,8 +67,10 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<optional>true</optional>
+			<version>1.18.30</version> <!-- Pastikan versi terbaru -->
+			<scope>provided</scope>
 		</dependency>
+
 
 		<!-- Flyway Database Migration -->
 		<dependency>
@@ -93,6 +95,12 @@
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
 			<version>6.1.7.Final</version> <!-- Versi Hibernate yang cocok dengan Spring Boot 3.x -->
+		</dependency>
+
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+			<version>2.0.1.Final</version>
 		</dependency>
 
 

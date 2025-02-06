@@ -1,49 +1,54 @@
 package com.rockstock.backend.infrastructure.system.security;
 
-import com.rockstock.backend.common.exceptions.DataNotFoundException;
-import com.rockstock.backend.entity.User;
-import com.rockstock.backend.infrastructure.usecase.user.repository.UserRepository;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.jwt.JwtClaimsSet;
+import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.source.JWKSource;
+import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.stereotype.Service;
-
-import java.time.Instant;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.util.Date;
+import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class TokenService {
-    private final JwtEncoder jwtEncoder;
-    private final UserRepository usersRepository;
 
-    public TokenService(JwtEncoder jwtEncoder, UserRepository usersRepository) {
-        this.jwtEncoder = jwtEncoder;
-        this.usersRepository = usersRepository;
+//    private final RsaKeyConfigProperties rsaKeyConfigProperties;
+    private final JwtEncoder jwtEncoder;
+    private final JwtDecoder jwtDecoder;
+
+    // Method to generate JWT token with RSA keys
+    public String generateToken(Map<String, Object> claims, String subject, long expiration) {
+//        RSAKey rsaKey = new RSAKey.Builder(rsaKeyConfigProperties.publicKey()).privateKey(rsaKeyConfigProperties.privateKey()).build();
+//        JWKSet jwkSet = new JWKSet(rsaKey);
+
+        // Create JWT token using NimbusJwtEncoder
+        return jwtEncoder.encode(jwt -> jwt
+                .subject(subject)
+                .claims(c -> c.putAll(claims))
+                .issuedAt(new Date())
+                .expiresAt(new Date(System.currentTimeMillis() + expiration))
+        ).getTokenValue();
     }
 
-    public String generateToken(Authentication authentication) {
-        Instant now = Instant.now();
-        long expiry = 36000L;
+    // Method to validate the JWT token
+    public boolean validateToken(String token) {
+        try {
+            Jwt jwt = jwtDecoder.decode(token);
+            return jwt != null;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
-        String email = authentication.getName();
-
-        User user = usersRepository.findByEmailContainsIgnoreCase(email).orElseThrow(() -> new DataNotFoundException("User not found"));
-
-        String scope = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .reduce((a, b) -> a + " " + b)
-                .orElse("");
-
-        JwtClaimsSet claims = JwtClaimsSet.builder()
-                .issuer("self")
-                .issuedAt(now)
-                .expiresAt(now.plusSeconds(expiry))
-                .subject(email)
-                .claim("scope", scope)
-                .claim("userId", user.getId())
-                .build();
-
-        return this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+    // Method to extract the username (subject) from the token
+    public String extractUsername(String token) {
+        Jwt jwt = jwtDecoder.decode(token);
+        return jwt.getSubject();
     }
 }

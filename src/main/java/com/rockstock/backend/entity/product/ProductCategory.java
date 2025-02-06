@@ -1,4 +1,4 @@
-package com.purwadhika.rockstock.entity.product;
+package com.rockstock.backend.entity.product;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

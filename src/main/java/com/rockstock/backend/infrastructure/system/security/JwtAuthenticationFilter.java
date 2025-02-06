@@ -16,6 +16,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,11 +42,17 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         try {
             Jwt jwt = jwtDecoder.decode(token);
             if (jwt != null) {
-                List<SimpleGrantedAuthority> authorities = jwt.getClaimAsStringList("scope").stream()
-                        .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList());
+                String userId = jwt.getClaimAsString("userId");
+                String email = jwt.getSubject(); // JWT "sub" biasanya adalah email
+                List<String> roles = jwt.getClaimAsStringList("role");
 
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(jwt, null, authorities);
+                List<SimpleGrantedAuthority> authorities = roles != null
+                        ? roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList())
+                        : Collections.emptyList();
+
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(email, null, authorities);
+
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }

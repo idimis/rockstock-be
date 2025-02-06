@@ -1,7 +1,7 @@
 package com.rockstock.backend.infrastructure.usecase.address.service;
 
-import com.rockstock.backend.entity.Address;
-import com.rockstock.backend.entity.User;
+import com.rockstock.backend.entity.user.Address;
+import com.rockstock.backend.entity.user.User;
 import com.rockstock.backend.infrastructure.usecase.address.dto.AddressRequestDTO;
 import com.rockstock.backend.infrastructure.usecase.address.dto.AddressResponseDTO;
 import com.rockstock.backend.infrastructure.usecase.address.dto.UpdateAddressRequestDTO;

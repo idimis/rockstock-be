@@ -1,8 +1,8 @@
-package com.purwadhika.rockstock.entity.user;
+package com.rockstock.backend.entity.user;
 
-import com.purwadhika.rockstock.entity.cart.Cart;
-import com.purwadhika.rockstock.entity.order.Order;
-import com.purwadhika.rockstock.entity.warehouse.WarehouseAdmin;
+import com.rockstock.backend.entity.cart.Cart;
+import com.rockstock.backend.entity.order.Order;
+import com.rockstock.backend.entity.warehouse.WarehouseAdmin;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;

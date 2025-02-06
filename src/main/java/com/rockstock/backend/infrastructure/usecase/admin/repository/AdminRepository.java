@@ -1,13 +1,10 @@
 package com.rockstock.backend.infrastructure.usecase.admin.repository;
 
-import com.rockstock.backend.entity.Admin;
+import com.rockstock.backend.entity.warehouse.WarehouseAdmin;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
 @Repository
-public interface AdminRepository extends JpaRepository<Admin, Long> {
-    Optional<Admin> findByEmail(String email);
-    boolean existsByEmail(String email);
+public interface AdminRepository extends JpaRepository<WarehouseAdmin, Long> {
+    boolean existsByUserId(Long userId);
 }

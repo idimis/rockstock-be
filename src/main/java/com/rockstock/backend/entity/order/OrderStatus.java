@@ -1,4 +1,4 @@
-package com.purwadhika.rockstock.entity.order;
+package com.rockstock.backend.entity.order;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

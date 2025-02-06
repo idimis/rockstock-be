@@ -1,4 +1,4 @@
-package com.rockstock.backend.infrastructure.usecase.shipping.dto;
+package com.rockstock.backend.infrastructure.usecase.shipping.DTO;
 
 import lombok.Getter;
 import lombok.Setter;

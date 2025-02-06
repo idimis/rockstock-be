@@ -4,7 +4,6 @@ import com.rockstock.backend.common.exceptions.DataNotFoundException;
 import com.rockstock.backend.infrastructure.system.security.TokenService;
 import com.rockstock.backend.infrastructure.usecase.user.auth.dto.LoginRequestDTO;
 import com.rockstock.backend.infrastructure.usecase.user.auth.dto.LoginResponseDTO;
-import com.rockstock.backend.infrastructure.usecase.user.auth.dto.UserAuth;
 import com.rockstock.backend.infrastructure.usecase.user.repository.UserRepository;
 import com.rockstock.backend.infrastructure.usecase.user.auth.service.LoginUsecase;
 import lombok.extern.java.Log;

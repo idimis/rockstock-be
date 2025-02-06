@@ -2,7 +2,6 @@ package com.rockstock.backend.infrastructure.usecase.user.auth.service.impl;
 
 import com.rockstock.backend.common.exceptions.DataNotFoundException;
 import com.rockstock.backend.entity.User;
-import com.rockstock.backend.infrastructure.usecase.user.auth.dto.UserAuth;
 import com.rockstock.backend.infrastructure.usecase.user.repository.UserRepository;
 import com.rockstock.backend.infrastructure.usecase.user.auth.service.GetUserAuthDetailsUsecase;
 import org.springframework.security.core.userdetails.UserDetails;

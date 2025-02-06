@@ -1,6 +1,6 @@
-package com.purwadhika.rockstock.entity.geolocation;
+package com.rockstock.backend.entity.geolocation;
 
-import com.purwadhika.rockstock.entity.user.Address;
+import com.rockstock.backend.entity.user.Address;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

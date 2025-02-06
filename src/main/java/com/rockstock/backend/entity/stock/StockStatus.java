@@ -1,4 +1,4 @@
-package com.purwadhika.rockstock.entity.stock;
+package com.rockstock.backend.entity.stock;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

@@ -1,6 +1,6 @@
-package com.purwadhika.rockstock.entity.order;
+package com.rockstock.backend.entity.order;
 
-import com.purwadhika.rockstock.entity.product.Product;
+import com.rockstock.backend.entity.product.Product;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

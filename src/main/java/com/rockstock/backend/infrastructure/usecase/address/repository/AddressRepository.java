@@ -1,6 +1,6 @@
 package com.rockstock.backend.infrastructure.usecase.address.repository;
 
-import com.rockstock.backend.entity.Address;
+import com.rockstock.backend.entity.user.Address;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

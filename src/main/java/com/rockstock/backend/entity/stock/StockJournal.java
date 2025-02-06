@@ -1,6 +1,6 @@
-package com.purwadhika.rockstock.entity.stock;
+package com.rockstock.backend.entity.stock;
 
-import com.purwadhika.rockstock.entity.warehouse.Warehouse;
+import com.rockstock.backend.entity.warehouse.Warehouse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
