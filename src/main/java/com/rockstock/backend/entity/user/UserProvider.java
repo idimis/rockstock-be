@@ -54,6 +54,6 @@ public class UserProvider {
     }
 
     // Relationships
-    @OneToMany(mappedBy = "user_provider", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "userProvider", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<User> users = new HashSet<>();
 }

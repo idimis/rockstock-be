@@ -64,6 +64,6 @@ public class PaymentMethod {
     @JoinColumn(name = "payment_category_id", referencedColumnName = "payment_category_id")
     private PaymentCategory paymentCategory;
 
-    @OneToMany(mappedBy = "payment_method", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "paymentMethod", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Order> orders = new HashSet<>();
 }

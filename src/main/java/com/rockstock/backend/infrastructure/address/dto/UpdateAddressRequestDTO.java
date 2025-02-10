@@ -1,0 +1,17 @@
+package com.rockstock.backend.infrastructure.address.dto;
+
+import lombok.*;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class UpdateAddressRequestDTO {
+
+    private String label;
+    private String addressDetail;
+    private String longitude;
+    private String latitude;
+    private String note;
+    private boolean isMain;
+    private Long cityId;
+}

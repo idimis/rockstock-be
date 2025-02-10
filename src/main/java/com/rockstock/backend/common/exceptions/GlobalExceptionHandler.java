@@ -16,33 +16,33 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalExceptionHandler {
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<?> handleDataAccessException(DataAccessException exception) {
-        return ApiResponse.failedResponse(exception.getMessage());
+        return ApiResponse.failed(exception.getMessage());
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<?> handleDataIntegrityViolationException(DataIntegrityViolationException exception) {
         String rootCauseMessage = exception.getRootCause() != null ? exception.getRootCause().getMessage() : "Data integrity violation";
-        return ApiResponse.failedResponse("Data integrity violation: " + rootCauseMessage);
+        return ApiResponse.failed("Data integrity violation: " + rootCauseMessage);
     }
 
     @ExceptionHandler(DuplicateEmailException.class)
     public ResponseEntity<?> handleDuplicateEmailException(DuplicateEmailException exception) {
-        return ApiResponse.failedResponse("Email already exists");
+        return ApiResponse.failed("Email already exists");
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException exception) {
-        return ApiResponse.failedResponse(HttpStatus.UNAUTHORIZED.value(), "Access denied");
+        return ApiResponse.failed(HttpStatus.UNAUTHORIZED.value(), "Access denied");
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
         String errorMessage = exception.getBindingResult().getFieldError().getDefaultMessage();
-        return ApiResponse.failedResponse(errorMessage);
+        return ApiResponse.failed(errorMessage);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleGeneralException(Exception exception) {
-        return ApiResponse.failedResponse(exception.getMessage());
+        return ApiResponse.failed(exception.getMessage());
     }
 }

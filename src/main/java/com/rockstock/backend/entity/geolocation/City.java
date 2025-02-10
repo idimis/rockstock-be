@@ -1,6 +1,5 @@
 package com.rockstock.backend.entity.geolocation;
 
-import com.rockstock.backend.entity.user.Address;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

@@ -1,6 +1,7 @@
 package com.rockstock.backend.entity.user;
 
 import com.rockstock.backend.entity.cart.Cart;
+import com.rockstock.backend.entity.geolocation.Address;
 import com.rockstock.backend.entity.order.Order;
 import com.rockstock.backend.entity.warehouse.WarehouseAdmin;
 import jakarta.persistence.*;
@@ -13,7 +14,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
-import javax.management.relation.Role;
 import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -58,6 +58,10 @@ public class User {
     private String gender;
 
     @NotNull
+    @Column(nullable = false)
+    private boolean isAdmin = false;
+
+    @NotNull
     @ColumnDefault("false")
     @Column(name = "is_verified", nullable = false)
     private Boolean isVerified = false;
@@ -92,6 +96,10 @@ public class User {
     }
 
     // Relationships
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_provider_id", referencedColumnName = "user_provider_id")
     private UserProvider userProvider;
@@ -107,13 +115,5 @@ public class User {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Order> orders = new HashSet<>();
-
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "role_id")
-    )
-    private Set<Role> roles = new HashSet<>();
 
 }

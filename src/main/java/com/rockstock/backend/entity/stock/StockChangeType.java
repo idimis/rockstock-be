@@ -59,6 +59,6 @@ public class StockChangeType {
     }
 
     // Relationships
-    @OneToMany(mappedBy = "stock_change_type", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "stockChangeType", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<StockJournal> stockJournals = new HashSet<>();
 }

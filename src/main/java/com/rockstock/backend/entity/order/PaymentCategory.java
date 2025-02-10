@@ -60,6 +60,6 @@ public class PaymentCategory {
     }
 
     // Relationships
-    @OneToMany(mappedBy = "payment_category", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "paymentCategory", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PaymentMethod> paymentMethods = new HashSet<>();
 }

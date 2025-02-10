@@ -64,7 +64,7 @@ public class OrderStatus {
     }
 
     // Relationships
-    @OneToMany(mappedBy = "order_status", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "orderStatus", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Order> orders = new HashSet<>();
 }
 

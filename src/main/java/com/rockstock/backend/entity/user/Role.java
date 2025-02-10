@@ -24,8 +24,8 @@ public class Role {
     private Long id;
 
     @NotNull
-    @Column(nullable = false, unique = true)
-    private String role;
+    @Column(name= "name", nullable = false, unique = true)
+    private String name;
 
     @Column(name = "deleted_at")
     private OffsetDateTime deletedAt;

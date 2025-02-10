@@ -62,6 +62,6 @@ public class ProductCategory {
     }
 
     // Relationships
-    @OneToMany(mappedBy = "product_category", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "productCategory", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Product> products = new HashSet<>();
 }
