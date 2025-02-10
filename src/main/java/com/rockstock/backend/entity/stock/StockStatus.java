@@ -1,10 +1,7 @@
-package com.purwadhika.rockstock.entity.stock;
+package com.rockstock.backend.entity.stock;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.OffsetDateTime;
@@ -25,7 +22,7 @@ public class StockStatus {
     @Column(name = "stock_status_id", nullable = false)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "status", nullable = false)
     private String status;
 
     @Column(name = "deleted_at")
@@ -56,6 +53,6 @@ public class StockStatus {
     }
 
     // Relationships
-    @OneToMany(mappedBy = "stock_status", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "stockStatus", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<StockJournal> stockJournals = new HashSet<>();
 }

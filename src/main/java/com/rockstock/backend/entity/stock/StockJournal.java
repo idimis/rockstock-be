@@ -1,11 +1,8 @@
-package com.purwadhika.rockstock.entity.stock;
+package com.rockstock.backend.entity.stock;
 
-import com.purwadhika.rockstock.entity.warehouse.Warehouse;
+import com.rockstock.backend.entity.warehouse.Warehouse;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.OffsetDateTime;
@@ -24,13 +21,13 @@ public class StockJournal {
     @Column(name = "stock_journal_id", nullable = false)
     private Long id;
 
-    @Column(nullable = false)
-    private Long quantity;
+    @Column(name = "mutation_quantity", nullable = false)
+    private Long mutationQuantity;
 
-    @Column(name = "previous_stock_quantity", nullable = false)
+    @Column(name = "previous_stock", nullable = false)
     private Long previousStockQuantity;
 
-    @Column(name = "new_stock_quantity", nullable = false)
+    @Column(name = "new_stock", nullable = false)
     private Long newStockQuantity;
 
     private String description;

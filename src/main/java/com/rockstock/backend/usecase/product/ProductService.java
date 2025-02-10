@@ -1,227 +1,74 @@
 package com.rockstock.backend.usecase.product;
 
-import com.rockstock.backend.entity.Product;
-import com.rockstock.backend.entity.Review;
-import com.rockstock.backend.entity.User;
-import com.rockstock.backend.infrastructure.system.product.dto.CreateProductRequestDTO;
-import com.rockstock.backend.infrastructure.system.product.dto.ProductDTO;
-import com.rockstock.backend.infrastructure.usecase.product.dto.ProductStatisticsDTO;
-import com.rockstock.backend.infrastructure.system.product.dto.UpdateProductRequestDTO;
-import com.rockstock.backend.infrastructure.system.product.repository.ProductRepository;
-import com.rockstock.backend.infrastructure.usecase.review.dto.ReviewRequestDTO;
-import com.rockstock.backend.infrastructure.usecase.review.dto.ReviewResponseDTO;
-import com.rockstock.backend.infrastructure.usecase.review.repository.ReviewRepository;
-import com.rockstock.backend.infrastructure.usecase.ticket.repository.TicketRepository;
-import com.rockstock.backend.infrastructure.usecase.transaction.dto.TransactionHistoryDTO;
-import com.rockstock.backend.infrastructure.usecase.transaction.repository.TransactionRepository;
-import com.rockstock.backend.usecase.user.repository.UserRepository;
-import jakarta.transaction.Transactional;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import com.rockstock.backend.entity.product.Product;
+import com.rockstock.backend.infrastructure.product.dto.CreateProductRequestDTO;
+import com.rockstock.backend.infrastructure.product.dto.CreateProductResponseDTO;
+import com.rockstock.backend.infrastructure.product.repository.ProductRepository;
+import com.rockstock.backend.infrastructure.stock.repository.StockRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
+import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ProductService {
 
-    private final TicketRepository ticketRepository;
-    private final ReviewRepository reviewRepository;
     private final ProductRepository productRepository;
-    private final UserRepository userRepository;
-    private final TransactionRepository transactionRepository;
 
-    public ProductService(ProductRepository productRepository,
-                          UserRepository userRepository,
-                          TicketRepository ticketRepository,
-                          ReviewRepository reviewRepository,
-                          TransactionRepository transactionRepository) {
-        this.ticketRepository = ticketRepository;
-        this.reviewRepository = reviewRepository;
-        this.productRepository = productRepository;
-        this.userRepository = userRepository;
-        this.transactionRepository = transactionRepository;
+    // Create Product
+    public Product createProduct(Product product) {
+        return productRepository.save(product);
     }
 
-    public Product createProduct(CreateProductRequestDTO request, Long organizerId) {
-        User organizer = userRepository.findById(organizerId)
-                .orElseThrow(() -> new RuntimeException("Organizer not found"));
+    // Get All Products (dengan totalStocks dihitung otomatis)
+    public List<CreateProductResponseDTO> getAllProducts() {
+        return productRepository.findAllByDeletedAtIsNull().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
 
-        Product product = new Product();
-        product.setImageUrl(request.getImageUrl());
-        product.setTitle(request.getTitle());
-        product.setDescription(request.getDescription());
-        product.setDateTimeStart(request.getDateTimeStart());
-        product.setDateTimeEnd(request.getDateTimeEnd());
-        product.setLocation(request.getLocation());
-        product.setLocationDetails(request.getLocationDetails());
-        product.setCategory(request.getCategory());
-        product.setFee(request.getFee());
-        product.setAvailableSeats(request.getAvailableSeats());
-        product.setOrganizer(organizer);
+    // Get Product By ID
+    public CreateProductResponseDTO getProductById(Long id) {
+        return productRepository.findByIdAndDeletedAtIsNull(id)
+                .map(this::convertToDTO)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+    }
 
-        product.generateSlug();
+    // Update Product
+    public Product updateProduct(Long id, Product productDetails) {
+        Product product = productRepository.findByIdAndDeletedAtIsNull(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+
+        product.setProductName(productDetails.getProductName());
+        product.setDetail(productDetails.getDetail());
+        product.setPrice(productDetails.getPrice());
+        product.setWeight(productDetails.getWeight());
 
         return productRepository.save(product);
     }
 
-    public Product updateProduct(Long productId, UpdateProductRequestDTO request, Long organizerId) {
-        Product product = productRepository.findByIdAndOrganizerId(productId, organizerId)
-                .orElseThrow(() -> new IllegalArgumentException("Product not found or not owned by organizer"));
+    // Soft Delete Product
+    public void deleteProduct(Long id) {
+        Product product = productRepository.findByIdAndDeletedAtIsNull(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
 
-        if (request.getImageUrl() != null) {
-            product.setImageUrl(request.getImageUrl());
-        }
-        if (request.getTitle() != null) {
-            product.setTitle(request.getTitle());
-        }
-        if (request.getDescription() != null) {
-            product.setDescription(request.getDescription());
-        }
-        if (request.getDateTimeStart() != null) {
-            product.setDateTimeStart(request.getDateTimeStart());
-        }
-        if (request.getDateTimeEnd() != null) {
-            product.setDateTimeEnd(request.getDateTimeEnd());
-        }
-        if (request.getLocation() != null) {
-            product.setLocation(request.getLocation());
-        }
-        if (request.getLocationDetails() != null) {
-            product.setLocationDetails(request.getLocationDetails());
-        }
-        if (request.getCategory() != null) {
-            product.setCategory(request.getCategory());
-        }
-        if (request.getFee() != null) {
-            product.setFee(request.getFee());
-        }
-        if (request.getAvailableSeats() != null) {
-            product.setAvailableSeats(request.getAvailableSeats());
-        }
-
-        product.generateSlug();
-
-        return productRepository.save(product);
+        product.setDeletedAt(OffsetDateTime.now());
+        productRepository.save(product);
     }
 
-    public void deleteProduct(Long productId, Long organizerId) {
-        Product product = productRepository.findByIdAndOrganizerId(productId, organizerId)
-                .orElseThrow(() -> new IllegalArgumentException("Product not found or not owned by organizer"));
-        productRepository.delete(product);
-    }
-
-    public Page<Product> getAllProductsByOrganizer(Pageable pageable, Long organizerId) {
-        return productRepository.findByOrganizerId(pageable, organizerId);
-    }
-
-    public Optional<ProductDTO> getProductById(Long id) {
-        return productRepository.findById(id).map(this::convertToDTO);
-    }
-
-    private ProductDTO convertToDTO(Product product) {
-        return new ProductDTO(
+    private CreateProductResponseDTO convertToDTO(Product product) {
+        return new CreateProductResponseDTO(
                 product.getId(),
-                product.getOrganizer().getId(),
-                product.getImageUrl(),
-                product.getTitle(),
-                product.getDescription(),
-                product.getDateTimeStart(),
-                product.getDateTimeEnd(),
-                product.getLocation(),
-                product.getLocationDetails(),
-                product.getCategory(),
-                product.getFee(),
-                product.getAvailableSeats(),
-                product.getBookedSeats(),
-                product.getCreatedAt(),
-                product.getUpdatedAt(),
-                product.getDeletedAt()
+                product.getProductName(),
+                product.getDetail(),
+                product.getPrice(),
+                product.getWeight(),
+                product.getTotalStocks()
         );
-    }
-
-    public Page<Product> getProductsExcludingLocation(Pageable pageable, String location) {
-        return productRepository.findByLocationNot(pageable, location);
-    }
-
-    public Page<Product> getUpcomingProducts(Pageable pageable, String location, String category, String search, boolean sortByNewest, boolean sortByHighestRating) {
-        LocalDateTime currentDateTime = LocalDateTime.now();
-        if (sortByHighestRating) {
-            return productRepository.findUpcomingProductsSortedByHighestRating(pageable, currentDateTime, location, category, search);
-        } else if (sortByNewest) {
-            return productRepository.findUpcomingProductsSortedByNewest(pageable, currentDateTime, location, category, search);
-        } else {
-            return productRepository.findUpcomingProducts(pageable, currentDateTime, location, category, search);
-        }
-    }
-
-    @Transactional
-    public ReviewResponseDTO submitReview(Long customerId, ReviewRequestDTO reviewRequest) {
-        if (!ticketRepository.existsByCustomerIdAndProductId(customerId, reviewRequest.getProductId())) {
-            throw new IllegalArgumentException("Customer has not bought a ticket for this product");
-        }
-
-        Product product = productRepository.findById(reviewRequest.getProductId())
-                .orElseThrow(() -> new IllegalArgumentException("Product not found"));
-
-        if (product.getDateTimeEnd().isAfter(LocalDateTime.now())) {
-            throw new IllegalArgumentException("Product has not ended yet");
-        }
-
-        if (reviewRepository.existsByCustomerIdAndProductId(customerId, reviewRequest.getProductId())) {
-            throw new IllegalArgumentException("Customer has already submitted a review for this product");
-        }
-
-        User customer = userRepository.findById(customerId)
-                .orElseThrow(() -> new IllegalArgumentException("Customer not found"));
-
-        Review review = new Review();
-        review.setCustomerId(customerId);
-        review.setProductId(product.getId());
-        review.setRating(reviewRequest.getRating());
-        review.setReview(reviewRequest.getReview());
-        review = reviewRepository.save(review);
-
-        ReviewResponseDTO responseDTO = new ReviewResponseDTO();
-        responseDTO.setId(review.getId());
-        responseDTO.setCustomerId(review.getCustomerId());
-        responseDTO.setProductId(review.getProductId());
-        responseDTO.setRating(review.getRating());
-        responseDTO.setReview(review.getReview());
-        responseDTO.setCreatedAt(review.getCreatedAt());
-        responseDTO.setProductTitle(product.getTitle());
-        responseDTO.setProductDateTimeStart(product.getDateTimeStart());
-        responseDTO.setProductDateTimeEnd(product.getDateTimeEnd());
-        responseDTO.setCustomerName(customer.getName());
-
-        return responseDTO;
-    }
-
-    public Page<Product> getPastProductsByCustomer(Long customerId, Pageable pageable) {
-        return productRepository.findPastProductsByCustomer(customerId, LocalDateTime.now(), pageable);
-    }
-
-    public Page<Product> getUpcomingProductsByCustomer(Long customerId, Pageable pageable) {
-        return productRepository.findUpcomingProductsByCustomer(customerId, LocalDateTime.now(), pageable);
-    }
-
-    public Page<ProductStatisticsDTO> getProductStatisticsByOrganizer(Long organizerId, Pageable pageable) {
-        return productRepository.findProductStatisticsByOrganizer(organizerId, pageable);
-    }
-
-    public ProductDTO getProductBySlug(String slug) {
-        Product product = productRepository.findBySlug(slug)
-                .orElseThrow(() -> new IllegalArgumentException("Product not found"));
-        return convertToDTO(product);
-    }
-
-    public Page<Product> getHottestUpcomingProduct(Pageable pageable) {
-        LocalDateTime currentDateTime = LocalDateTime.now();
-        return productRepository.findHottestUpcomingProduct(currentDateTime, pageable);
-    }
-
-    public Page<TransactionHistoryDTO> getTransactionHistoryByOrganizer(Long organizerId, Pageable pageable) {
-        return transactionRepository.findTransactionHistoryByOrganizer(organizerId, pageable);
     }
 }

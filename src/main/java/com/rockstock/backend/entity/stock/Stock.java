@@ -1,12 +1,9 @@
-package com.purwadhika.rockstock.entity.stock;
+package com.rockstock.backend.entity.stock;
 
-import com.purwadhika.rockstock.entity.product.Product;
-import com.purwadhika.rockstock.entity.warehouse.WarehouseAdmin;
+import com.rockstock.backend.entity.product.Product;
+import com.rockstock.backend.entity.warehouse.Warehouse;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.OffsetDateTime;
@@ -25,10 +22,10 @@ public class Stock {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stock_id_gen")
     @SequenceGenerator(name = "stock_id_gen", sequenceName = "stock_id_seq", schema = "rockstock", allocationSize = 1)
     @Column(name = "stock_id", nullable = false)
-    private Long id;
+    private Long stockId;
 
-    @Column(nullable = false)
-    private Long stock;
+    @Column(name = "stock_quantity", nullable = false)
+    private Long stockQuantity;
 
     @Column(name = "deleted_at")
     private OffsetDateTime deletedAt;
@@ -57,14 +54,13 @@ public class Stock {
         deletedAt = OffsetDateTime.now();
     }
 
-    // Relationships
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "warehouse_admin_id", nullable = false)
-    private WarehouseAdmin warehouseAdmin;
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "warehouse_id", nullable = false)
+    private Warehouse warehouse;
 
     @OneToMany(mappedBy = "stock", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<StockJournal> stockJournals = new HashSet<>();

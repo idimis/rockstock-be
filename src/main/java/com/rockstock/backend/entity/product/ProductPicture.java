@@ -16,12 +16,12 @@ import java.time.OffsetDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductPicture {
+public class    ProductPicture {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_picture_id_gen")
     @SequenceGenerator(name = "product_picture_id_gen", sequenceName = "product_picture_id_seq", schema = "rockstock", allocationSize = 1)
     @Column(name = "product_picture_id", nullable = false)
-    private Long id;
+    private Long pictureId;
 
     @NotNull
     @Column(name = "product_picture_url", nullable = false)
@@ -31,6 +31,10 @@ public class ProductPicture {
     @ColumnDefault("false")
     @Column(name = "is_main", nullable = false)
     private Boolean isMain = false;
+
+    @NotNull
+    @Column(name = "position", nullable = false)
+    private Integer position;
 
     @Column(name = "deleted_at")
     private OffsetDateTime deletedAt;

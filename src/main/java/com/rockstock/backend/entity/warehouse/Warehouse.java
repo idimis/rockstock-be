@@ -1,12 +1,9 @@
-package com.purwadhika.rockstock.entity.warehouse;
+package com.rockstock.backend.entity.warehouse;
 
-import com.purwadhika.rockstock.entity.geolocation.City;
+//import com.rockstock.backend.entity.geolocation.City;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.OffsetDateTime;
@@ -27,20 +24,20 @@ public class Warehouse {
     private Long id;
 
     @NotNull
-    @Column(nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
     @NotNull
-    @Column(nullable = false)
+    @Column(name = "address", nullable = false)
     private String address;
 
-    @NotNull
-    @Column(nullable = false)
-    private String longitude;
-
-    @NotNull
-    @Column(nullable = false)
-    private String latitude;
+//    @NotNull
+//    @Column(nullable = false)
+//    private String longitude;
+//
+//    @NotNull
+//    @Column(nullable = false)
+//    private String latitude;
 
     @Column(name = "deleted_at")
     private OffsetDateTime deletedAt;
@@ -72,10 +69,10 @@ public class Warehouse {
     }
 
     // Relationships
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "city_id", nullable = false)
-    private City city;
-
-    @OneToMany(mappedBy = "warehouse", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<WarehouseAdmin> warehouseAdmins = new HashSet<>();
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "city_id", nullable = false)
+//    private City city;
+//
+//    @OneToMany(mappedBy = "warehouse", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    private Set<WarehouseAdmin> warehouseAdmins = new HashSet<>();
 }
