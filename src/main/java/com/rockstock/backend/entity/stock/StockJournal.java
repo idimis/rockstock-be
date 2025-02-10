@@ -56,8 +56,8 @@ public class StockJournal {
 
     // Relationships
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "stock_id", nullable = false)
-    private Stock stock;
+    @JoinColumn(name = "warehouse_stock_id", nullable = false)
+    private WarehouseStock warehouseStock;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "origin_warehouse_id")

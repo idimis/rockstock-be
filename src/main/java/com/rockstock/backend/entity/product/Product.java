@@ -2,7 +2,7 @@ package com.rockstock.backend.entity.product;
 
 import com.rockstock.backend.entity.cart.CartItem;
 import com.rockstock.backend.entity.order.OrderItem;
-import com.rockstock.backend.entity.stock.Stock;
+import com.rockstock.backend.entity.stock.WarehouseStock;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -46,8 +46,8 @@ public class Product {
     private BigDecimal weight;
 
     @NotNull
-    @Column(nullable = false, precision = 5)
-    private BigDecimal stock;
+    @Column(name = "total_stock", nullable = false, precision = 10)
+    private BigDecimal totalStock;
 
     @Column(name = "deleted_at")
     private OffsetDateTime deletedAt;
@@ -87,7 +87,7 @@ public class Product {
     private Set<ProductPicture> productPictures = new HashSet<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Stock> stocks = new HashSet<>();
+    private Set<WarehouseStock> stocks = new HashSet<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CartItem> cartItems = new HashSet<>();

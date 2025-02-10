@@ -1,7 +1,7 @@
 package com.rockstock.backend.entity.stock;
 
 import com.rockstock.backend.entity.product.Product;
-import com.rockstock.backend.entity.warehouse.WarehouseAdmin;
+import com.rockstock.backend.entity.warehouse.Warehouse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,17 +14,17 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "stocks", schema = "rockstock")
+@Table(name = "warehouse_stocks", schema = "rockstock")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Stock {
+public class WarehouseStock {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stock_id_gen")
-    @SequenceGenerator(name = "stock_id_gen", sequenceName = "stock_id_seq", schema = "rockstock", allocationSize = 1)
-    @Column(name = "stock_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "warehouse_stock_id_gen")
+    @SequenceGenerator(name = "warehouse_stock_id_gen", sequenceName = "warehouse_stock_id_seq", schema = "rockstock", allocationSize = 1)
+    @Column(name = "warehouse_stock_id", nullable = false)
     private Long id;
 
     @Column(nullable = false)
@@ -59,13 +59,13 @@ public class Stock {
 
     // Relationships
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "warehouse_admin_id", nullable = false)
-    private WarehouseAdmin warehouseAdmin;
+    @JoinColumn(name = "warehouse_id", nullable = false)
+    private Warehouse warehouse;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @OneToMany(mappedBy = "stock", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "warehouseStock", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<StockJournal> stockJournals = new HashSet<>();
 }

@@ -2,6 +2,7 @@ package com.rockstock.backend.entity.warehouse;
 
 import com.rockstock.backend.entity.geolocation.City;
 import com.rockstock.backend.entity.stock.StockJournal;
+import com.rockstock.backend.entity.stock.WarehouseStock;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -79,6 +80,9 @@ public class Warehouse {
 
     @OneToMany(mappedBy = "warehouse", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<WarehouseAdmin> warehouseAdmins = new HashSet<>();
+
+    @OneToMany(mappedBy = "warehouse", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<WarehouseStock> warehouseStocks = new HashSet<>();
 
     @OneToMany(mappedBy = "originWarehouse", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<StockJournal> originStockJournals = new HashSet<>();
