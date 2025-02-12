@@ -20,7 +20,7 @@ import java.util.Set;
 public class CreateUserRequestDTO {
     @NotBlank
     @Size(min = 1, max = 100)
-    private String fullName;
+    private String fullname;
 
     @NotBlank
     @Email
@@ -42,7 +42,7 @@ public class CreateUserRequestDTO {
     public User toEntity() {
         User user = new User();
 
-        user.setFullname(fullName);
+        user.setFullname(fullname);
         user.setEmail(email);
         user.setPassword(password);
         user.setBirthDate(birthdate);
