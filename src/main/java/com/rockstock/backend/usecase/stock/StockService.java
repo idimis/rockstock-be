@@ -63,7 +63,7 @@ public class StockService {
 
     public void processStockMutationService(Long journalId, boolean isApproved) {
         StockJournal journal = stockJournalRepository.findById(journalId)
-                .orElseThrow(() -> new RuntimeException("Stock journal not found"));.
+                .orElseThrow(() -> new RuntimeException("Stock journal not found"));
 
         Stock originStock = stockRepository.findByProductAndWarehouse(
                         journal.getStock().getProduct(), journal.getOriginWarehouse())

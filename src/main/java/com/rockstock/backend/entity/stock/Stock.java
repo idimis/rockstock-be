@@ -3,6 +3,7 @@ package com.rockstock.backend.entity.stock;
 import com.rockstock.backend.entity.product.Product;
 import com.rockstock.backend.entity.warehouse.Warehouse;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -24,6 +25,7 @@ public class Stock {
     @Column(name = "stock_id", nullable = false)
     private Long stockId;
 
+    @NotNull
     @Column(name = "stock_quantity", nullable = false)
     private Long stockQuantity;
 

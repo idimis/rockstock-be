@@ -29,7 +29,7 @@ public class ProductPictureService {
                 .orElseThrow(() -> new EntityNotFoundException("Product not found"));
 
         // Count existing pictures
-        long pictureCount = productPictureRepository.countByProductProductId(product.getId());
+        long pictureCount = productPictureRepository.countByProductId(product.getId());
         if (pictureCount >= 5) {
             throw new IllegalStateException("A product can only have up to 5 pictures.");
         }

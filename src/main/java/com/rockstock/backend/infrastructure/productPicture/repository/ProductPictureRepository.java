@@ -1,6 +1,7 @@
 package com.rockstock.backend.infrastructure.productPicture.repository;
 
 import com.rockstock.backend.entity.product.ProductPicture;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -11,10 +12,11 @@ import java.util.List;
 public interface ProductPictureRepository extends JpaRepository<ProductPicture, Long> {
     List<ProductPicture> findByProductIdOrderByPositionAsc(Long productId);
 
-    int countByProductProductId(Long productId);
+    int countByProductId(Long productId);
 
     @Modifying
-    @Query("UPDATE ProductPicture pp SET pp.isMain = false WHERE pp.product.productId = :productId")
+    @Transactional
+    @Query("UPDATE ProductPicture p SET p.isMain = false WHERE p.product.id = :productId")
     void resetMainPicture(@Param("productId") Long productId);
 
     @Modifying

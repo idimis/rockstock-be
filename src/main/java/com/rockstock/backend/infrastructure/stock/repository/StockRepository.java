@@ -13,6 +13,6 @@ import java.util.Optional;
 public interface StockRepository extends JpaRepository<Stock, Long> {
     Optional<Stock> findByProductAndWarehouse(Product product, Warehouse warehouse);
 
-    @Query("SELECT COALESCE(SUM(s.quantity), 0) FROM Stock s WHERE s.product.id = :productId")
+    @Query("SELECT COALESCE(SUM(s.stockQuantity), 0) FROM Stock s WHERE s.product.id = :productId")
     BigDecimal getTotalStockByProduct(@Param("productId") Long productId);
 }
