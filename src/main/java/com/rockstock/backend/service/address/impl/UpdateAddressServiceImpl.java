@@ -7,13 +7,10 @@ import com.rockstock.backend.infrastructure.address.dto.UpdateAddressRequestDTO;
 import com.rockstock.backend.infrastructure.address.repository.AddressRepository;
 import com.rockstock.backend.infrastructure.geolocation.repository.CityRepository;
 import com.rockstock.backend.service.address.UpdateAddressService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class UpdateAddressServiceImpl implements UpdateAddressService {

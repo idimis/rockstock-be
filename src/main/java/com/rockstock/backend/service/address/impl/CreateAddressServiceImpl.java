@@ -4,20 +4,16 @@ import com.rockstock.backend.entity.geolocation.Address;
 import com.rockstock.backend.entity.geolocation.City;
 import com.rockstock.backend.entity.user.User;
 import com.rockstock.backend.infrastructure.address.dto.CreateAddressRequestDTO;
-import com.rockstock.backend.infrastructure.address.dto.GetAddressResponseDTO;
-import com.rockstock.backend.infrastructure.address.dto.UpdateAddressRequestDTO;
 import com.rockstock.backend.infrastructure.address.repository.AddressRepository;
 import com.rockstock.backend.infrastructure.geolocation.repository.CityRepository;
 import com.rockstock.backend.infrastructure.user.repository.UserRepository;
 import com.rockstock.backend.service.address.CreateAddressService;
-import com.rockstock.backend.service.address.GetAddressService;
 import com.sun.jdi.request.DuplicateRequestException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class CreateAddressServiceImpl implements CreateAddressService {
