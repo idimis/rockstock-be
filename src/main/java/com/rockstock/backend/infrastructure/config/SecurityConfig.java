@@ -61,7 +61,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(new CorsConfigurationSourceImpl()))
                 .authorizeHttpRequests(authorize -> authorize
-                        // public endpoints
+                        // Public endpoints
                         .requestMatchers("/error/**").permitAll()
                         .requestMatchers("/api/v1/user/register").permitAll()
                         .requestMatchers("/api/v1/auth/login").permitAll()
@@ -70,7 +70,11 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/forgot-password").permitAll()
                         .requestMatchers("/api/v1/auth/reset-password").permitAll()
                         .requestMatchers("/api/v1/auth/verify-email").permitAll()
-                        // private endpoints
+                        .requestMatchers("/test/**").permitAll() // Allow test API access
+                        .requestMatchers("/static/**").permitAll() // Allow email template
+                        .requestMatchers("/static/**", "/public/**").permitAll() // Allow static resources
+                        .requestMatchers("/verification-email.html").permitAll() // Allow email template
+                        .requestMatchers("/static/**").permitAll() // Allow static files
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .oauth2ResourceServer(oauth2 -> {
@@ -98,6 +102,7 @@ public class SecurityConfig {
                 .userDetailsService(getUserAuthDetailsService)
                 .build();
     }
+
 
     @Bean
     public JwtDecoder jwtDecoder() {

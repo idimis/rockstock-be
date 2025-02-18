@@ -17,8 +17,8 @@ public class TokenGenerationServiceImpl implements TokenGenerationService {
     private final UserRepository userRepository;
     private final JwtDecoder jwtDecoder;
 
-    private final long ACCESS_TOKEN_EXPIRY = 900L; // 15 minutes
-    private final long REFRESH_TOKEN_EXPIRY = 86400L; // 24 hours
+    private final long ACCESS_TOKEN_EXPIRY = 3600L;
+    private final long REFRESH_TOKEN_EXPIRY = 86400L;
 
     public TokenGenerationServiceImpl(JwtEncoder jwtEncoder, UserRepository userRepository, JwtDecoder jwtDecoder) {
         this.jwtEncoder = jwtEncoder;

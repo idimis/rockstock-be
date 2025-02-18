@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/address")
+@RequestMapping("/api/v1/addresses")
 public class AddressController {
 
     private final CreateAddressService createAddressService;
@@ -45,8 +45,8 @@ public class AddressController {
     }
 
     // Read / Get
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<?> getAddressesByUserId(@PathVariable Long userId) {
+    @GetMapping("/users")
+    public ResponseEntity<?> getAddressesByUserId(@RequestParam Long userId) {
         return ApiResponse.success(HttpStatus.OK.value(), "Get all user addresses success!", getAddressService.getAddressesByUserId(userId));
     }
 

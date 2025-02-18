@@ -75,6 +75,12 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>com.cloudinary</groupId>
+			<artifactId>cloudinary-http44</artifactId>
+			<version>1.39.0</version>
+		</dependency>
+
 
 		<!-- Flyway Database Migration -->
 <!--		<dependency>-->

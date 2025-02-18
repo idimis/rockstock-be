@@ -25,4 +25,10 @@ public class UserController {
     public ResponseEntity<?> createUser(@Valid @RequestBody CreateUserRequestDTO req) {
         return ApiResponse.success(HttpStatus.OK.value(), "Create user success", createUserService.createUser(req));
     }
+
+//    PUT UPLOAD PROFILE PICTURE
+//    @PostMapping("/register")
+//    public ResponseEntity<?> createUser(@Valid @RequestBody CreateUserRequestDTO req) {
+//        return ApiResponse.success(HttpStatus.OK.value(), "Create user success", createUserService.createUser(req));
+//    }
 }
