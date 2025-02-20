@@ -2,6 +2,7 @@ package com.rockstock.backend.infrastructure.address.dto;
 
 import com.rockstock.backend.entity.geolocation.Address;
 import com.rockstock.backend.entity.geolocation.City;
+import com.rockstock.backend.entity.geolocation.SubDistrict;
 import com.rockstock.backend.entity.user.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -26,15 +27,12 @@ public class CreateAddressRequestDTO {
 
     private String note;
 
-    private boolean isMain = false;
+    private Boolean isMain = false;
 
     @NotNull
-    private Long userId;
+    private Long subDistrictId;
 
-    @NotNull
-    private Long cityId;
-
-    public Address toEntity(User user, City city) {
+    public Address toEntity(User user, SubDistrict subDistrict) {
         Address address = new Address();
 
         address.setLabel(label);
@@ -44,7 +42,7 @@ public class CreateAddressRequestDTO {
         address.setNote(note);
         address.setIsMain(isMain);
         address.setUser(user);
-        address.setCity(city);
+        address.setSubDistrict(subDistrict);
 
         return address;
     }

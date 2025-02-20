@@ -1,5 +1,6 @@
 package com.rockstock.backend.entity.warehouse;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.rockstock.backend.entity.user.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -54,10 +55,12 @@ public class WarehouseAdmin {
     }
 
     // Relationships
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "warehouse_id", nullable = false)
     private Warehouse warehouse;

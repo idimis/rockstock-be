@@ -1,14 +1,17 @@
 package com.rockstock.backend.service.address.impl;
 
+import com.rockstock.backend.common.exceptions.DataNotFoundException;
+import com.rockstock.backend.common.exceptions.DuplicateDataException;
 import com.rockstock.backend.entity.geolocation.Address;
-import com.rockstock.backend.entity.geolocation.City;
+import com.rockstock.backend.entity.geolocation.SubDistrict;
 import com.rockstock.backend.entity.user.User;
 import com.rockstock.backend.infrastructure.address.dto.CreateAddressRequestDTO;
 import com.rockstock.backend.infrastructure.address.repository.AddressRepository;
-import com.rockstock.backend.infrastructure.geolocation.repository.CityRepository;
+import com.rockstock.backend.infrastructure.geolocation.repository.SubDistrictRepository;
+import com.rockstock.backend.infrastructure.user.auth.security.Claims;
 import com.rockstock.backend.infrastructure.user.repository.UserRepository;
 import com.rockstock.backend.service.address.CreateAddressService;
-import com.sun.jdi.request.DuplicateRequestException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,44 +19,34 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class CreateAddressServiceImpl implements CreateAddressService {
 
     private final AddressRepository addressRepository;
     private final UserRepository userRepository;
-    private final CityRepository cityRepository;
-
-    public CreateAddressServiceImpl(
-            AddressRepository addressRepository,
-            UserRepository userRepository,
-            CityRepository cityRepository) {
-        this.addressRepository = addressRepository;
-        this.userRepository = userRepository;
-        this.cityRepository = cityRepository;
-    }
+    private final SubDistrictRepository subDistrictRepository;
 
     @Override
     @Transactional
     public Address createAddress(CreateAddressRequestDTO req) {
-        Optional<Address> existingLabelAddress = addressRepository.findByUserIdAndLabel(req.getUserId(), req.getLabel());
+
+        Long userId = Claims.getUserIdFromJwt();
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new DataNotFoundException("User not found"));
+
+        SubDistrict subDistrict = subDistrictRepository.findById(req.getSubDistrictId())
+                .orElseThrow(() -> new DataNotFoundException("Sub-District not found"));
+
+        Optional<Address> existingLabelAddress = addressRepository.findByUserIdAndLabel(userId, req.getLabel());
         if (existingLabelAddress.isPresent()) {
-            throw new DuplicateRequestException("Label is already exist !");
+            throw new DuplicateDataException("Label is already exist !");
         }
 
-        User user = userRepository.findById(req.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        Address newAddress = req.toEntity(user, subDistrict);
 
-        City city = cityRepository.findById(req.getCityId())
-                .orElseThrow(() -> new RuntimeException("City not found"));
-
-        Address newAddress = new Address();
-
-        newAddress.setUser(user);
-        newAddress.setCity(city);
-
-        List<Address> checkAddress = addressRepository.findByUserId(req.getUserId());
-        if (checkAddress.isEmpty()) {
-            newAddress.setIsMain(true);
-        }
+        List<Address> checkAddress = addressRepository.findByUserId(userId);
+        newAddress.setIsMain(checkAddress.isEmpty());
 
         return addressRepository.save(newAddress);
     }

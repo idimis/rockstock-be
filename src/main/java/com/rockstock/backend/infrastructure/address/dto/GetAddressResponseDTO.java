@@ -15,9 +15,12 @@ public class GetAddressResponseDTO {
     private String longitude;
     private String latitude;
     private String note;
-    private boolean isMain;
+    private Boolean isMain;
     private Long userId;
+    private Long subDistrictId;
+    private Long districtId;
     private Long cityId;
+    private Long provinceId;
 
     public GetAddressResponseDTO(Address address) {
         this.addressId = address.getId();
@@ -28,6 +31,9 @@ public class GetAddressResponseDTO {
         this.note = address.getNote();
         this.isMain = address.getIsMain();
         this.userId = address.getUser().getId();
-        this.cityId = address.getCity().getId();
+        this.subDistrictId = address.getSubDistrict().getId();
+        this.districtId = address.getSubDistrict().getDistrict().getId();
+        this.cityId = address.getSubDistrict().getDistrict().getCity().getId();
+        this.provinceId = address.getSubDistrict().getDistrict().getCity().getProvince().getId();
     }
 }

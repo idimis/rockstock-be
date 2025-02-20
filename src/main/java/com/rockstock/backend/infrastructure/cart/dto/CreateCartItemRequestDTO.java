@@ -1,6 +1,5 @@
 package com.rockstock.backend.infrastructure.cart.dto;
 
-import com.rockstock.backend.entity.cart.Cart;
 import com.rockstock.backend.entity.cart.CartItem;
 import com.rockstock.backend.entity.product.Product;
 import jakarta.validation.constraints.NotNull;
@@ -22,17 +21,13 @@ public class CreateCartItemRequestDTO {
     private BigDecimal totalAmount;
 
     @NotNull
-    private Long cartId;
-
-    @NotNull
     private Long productId;
 
-    public CartItem toEntity(Cart cart, Product product) {
+    public CartItem toEntity(Product product) {
         CartItem cartItem = new CartItem();
 
         cartItem.setQuantity(quantity);
         cartItem.setTotalAmount(totalAmount);
-        cartItem.setCart(cart);
         cartItem.setProduct(product);
 
         return cartItem;

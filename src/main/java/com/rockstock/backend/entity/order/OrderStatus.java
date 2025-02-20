@@ -1,5 +1,6 @@
 package com.rockstock.backend.entity.order;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -28,7 +29,7 @@ public class OrderStatus {
 
     @NotNull
     @Column(nullable = false)
-    private String status;
+    private Enum<OrderStatusList> status;
 
     @NotNull
     @Column(nullable = false)
@@ -64,7 +65,8 @@ public class OrderStatus {
     }
 
     // Relationships
-    @OneToMany(mappedBy = "orderStatus", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Order> orders = new HashSet<>();
+//    @JsonManagedReference
+//    @OneToMany(mappedBy = "orderStatus", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+//    private Set<Order> orders = new HashSet<>();
 }
 

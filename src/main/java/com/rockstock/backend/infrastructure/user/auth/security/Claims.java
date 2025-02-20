@@ -44,7 +44,7 @@ public class Claims {
     }
 
     public static String getRoleFromJwt() {
-        Object roles = getClaimsFromJwt().get("roles");
+        Object roles = getClaimsFromJwt().get("scope");
         if (roles instanceof String) {
             return (String) roles;
         } else if (roles instanceof Collection) {

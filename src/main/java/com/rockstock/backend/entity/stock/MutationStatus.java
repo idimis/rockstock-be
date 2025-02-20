@@ -1,5 +1,6 @@
 package com.rockstock.backend.entity.stock;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,21 +13,21 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "stock_statuses", schema = "rockstock")
+@Table(name = "mutation_statuses", schema = "rockstock")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class StockStatus {
+public class MutationStatus {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stock_status_id_gen")
-    @SequenceGenerator(name = "stock_status_id_gen", sequenceName = "stock_status_id_seq", schema = "rockstock", allocationSize = 1)
-    @Column(name = "stock_status_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mutation_status_id_gen")
+    @SequenceGenerator(name = "mutation_status_id_gen", sequenceName = "mutation_status_id_seq", schema = "rockstock", allocationSize = 1)
+    @Column(name = "mutation_status_id", nullable = false)
     private Long id;
 
     @Column(nullable = false)
-    private String status;
+    private Enum<StatusList> status;
 
     @Column(name = "deleted_at")
     private OffsetDateTime deletedAt;
@@ -56,6 +57,7 @@ public class StockStatus {
     }
 
     // Relationships
-    @OneToMany(mappedBy = "stockStatus", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<StockJournal> stockJournals = new HashSet<>();
+//    @JsonManagedReference
+//    @OneToMany(mappedBy = "mutationStatus", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    private Set<MutationJournal> mutationJournals = new HashSet<>();
 }

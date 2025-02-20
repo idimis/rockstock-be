@@ -33,11 +33,11 @@ public class DeleteAddressServiceImpl implements DeleteAddressService {
                 .orElseThrow(() -> new DataNotFoundException("Address not found!"));
 
         if (address.getDeletedAt() != null) {
-            throw new RuntimeException("Address is already deleted!");
+            throw new DataNotFoundException("Address is already deleted!");
         }
 
         if (address.getIsMain()) {
-            throw new RuntimeException("Main Address cannot be deleted!");
+            throw new DataNotFoundException("Main Address cannot be deleted!");
         }
 
         address.setDeletedAt(OffsetDateTime.now());

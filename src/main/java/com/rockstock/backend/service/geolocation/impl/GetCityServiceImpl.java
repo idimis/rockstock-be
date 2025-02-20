@@ -2,7 +2,6 @@ package com.rockstock.backend.service.geolocation.impl;
 
 import com.rockstock.backend.common.exceptions.DataNotFoundException;
 import com.rockstock.backend.entity.geolocation.City;
-import com.rockstock.backend.infrastructure.geolocation.dto.GetCityResponseDTO;
 import com.rockstock.backend.infrastructure.geolocation.repository.CityRepository;
 import com.rockstock.backend.infrastructure.geolocation.repository.ProvinceRepository;
 import com.rockstock.backend.service.geolocation.GetCityService;
@@ -11,35 +10,58 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class GetCityServiceImpl implements GetCityService {
+
     private final CityRepository cityRepository;
-    private final ProvinceRepository provinceRepository;
 
     @Override
-    public List<GetCityResponseDTO> getCitiesByProvince(Long provinceId) {
-        return cityRepository.findByProvinceId(provinceId)
-                .stream()
-                .map(city -> new GetCityResponseDTO(city.getId(), city.getName(), city.getType(), city.getProvince().getId()))
-                .collect(Collectors.toList());
+    @Transactional
+    public List<City> getAllCities() {
+        return cityRepository.findAll();
     }
 
     @Override
-    public List<GetCityResponseDTO> getCityByName(String name) {
-        List<City> foundCities = cityRepository.findByNameContainingIgnoreCase(name);
-        if (foundCities.isEmpty()){
-            throw new DataNotFoundException("City(s) with query " + name + " not found !");
+    @Transactional
+    public List<City> getCitiesByProvinceId(Long provinceId) {
+        List<City> citiesByProvinceId = cityRepository.findByProvinceId(provinceId);
+        if (citiesByProvinceId.isEmpty()){
+            throw new DataNotFoundException("City not found !");
         }
-        return foundCities.stream().map(GetCityResponseDTO::new).toList();
+        return citiesByProvinceId;
     }
 
     @Override
-    public List<GetCityResponseDTO> getAllCities() {
-        return cityRepository.findAll().stream().map(GetCityResponseDTO::new).toList();
+    @Transactional
+    public List<City> getCitiesByProvinceName(String name) {
+        List<City> citiesByProvinceName = cityRepository.findByProvinceName(name);
+        if (citiesByProvinceName.isEmpty()){
+            throw new DataNotFoundException("City not found !");
+        }
+        return citiesByProvinceName;
     }
 
+    @Override
+    @Transactional
+    public Optional<City> getByCityId(Long cityId) {
+        Optional<City> city = cityRepository.findById(cityId);
+        if (city.isEmpty()){
+            throw new DataNotFoundException("Province not found !");
+        }
+        return city;
+    }
+
+    @Override
+    @Transactional
+    public Optional<City> getByCityName(String name) {
+        Optional<City> cityByName = cityRepository.findByNameContainingIgnoreCase(name);
+        if (cityByName.isEmpty()){
+            throw new DataNotFoundException("City not found !");
+        }
+        return cityByName;
+    }
 }

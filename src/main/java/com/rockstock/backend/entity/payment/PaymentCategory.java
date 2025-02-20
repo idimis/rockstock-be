@@ -1,5 +1,6 @@
-package com.rockstock.backend.entity.order;
+package com.rockstock.backend.entity.payment;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -28,7 +29,7 @@ public class PaymentCategory {
 
     @NotNull
     @Column(nullable = false, length = 50)
-    private String paymentCategory;
+    private String name;
 
     @Column(name = "deleted_at")
     private OffsetDateTime deletedAt;
@@ -60,6 +61,7 @@ public class PaymentCategory {
     }
 
     // Relationships
-    @OneToMany(mappedBy = "paymentCategory", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<PaymentMethod> paymentMethods = new HashSet<>();
+//    @JsonManagedReference
+//    @OneToMany(mappedBy = "paymentCategory", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+//    private Set<PaymentMethod> paymentMethods = new HashSet<>();
 }

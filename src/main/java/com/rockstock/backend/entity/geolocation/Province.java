@@ -1,5 +1,6 @@
 package com.rockstock.backend.entity.geolocation;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -54,6 +55,7 @@ public class Province {
     }
 
     // Relationships
-    @OneToMany(mappedBy = "province", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<City> cities = new HashSet<>();
+//    @JsonManagedReference
+//    @OneToMany(mappedBy = "province", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    private Set<City> cities = new HashSet<>();
 }

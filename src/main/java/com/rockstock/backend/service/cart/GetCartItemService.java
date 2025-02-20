@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface GetCartItemService {
-    List<CartItem> getAllByActiveCartAndCartId(Long cartId, boolean isActive);
-    Optional<CartItem> getByActiveCartAndCartIdAndProductId(Long cartId, Long productId, boolean isActive);
+    List<CartItem> getAllByActiveCartId();
+    Optional<CartItem> getByActiveCartIdAndId(Long cartItemId);
+    Optional<CartItem> getByActiveCartIdAndProductId(Long productId);
+    Optional<CartItem> getByActiveCartIdAndProductName(String name);
 }

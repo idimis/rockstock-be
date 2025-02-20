@@ -3,27 +3,33 @@ package com.rockstock.backend.service.cart.impl;
 import com.rockstock.backend.common.exceptions.DataNotFoundException;
 import com.rockstock.backend.common.exceptions.OutOfStockException;
 import com.rockstock.backend.common.exceptions.StockLimitException;
+import com.rockstock.backend.entity.cart.Cart;
 import com.rockstock.backend.entity.cart.CartItem;
 import com.rockstock.backend.entity.product.Product;
 import com.rockstock.backend.infrastructure.cart.dto.UpdateCartItemRequestDTO;
 import com.rockstock.backend.infrastructure.cart.repository.CartItemRepository;
+import com.rockstock.backend.infrastructure.cart.repository.CartRepository;
 import com.rockstock.backend.infrastructure.product.repository.ProductRepository;
+import com.rockstock.backend.infrastructure.user.auth.security.Claims;
+import com.rockstock.backend.service.cart.DeleteCartItemService;
 import com.rockstock.backend.service.cart.UpdateCartItemService;
+import lombok.RequiredArgsConstructor;
+import org.eclipse.angus.mail.iap.Response;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UpdateCartItemServiceImpl implements UpdateCartItemService {
 
     private final CartItemRepository cartItemRepository;
+    private final CartRepository cartRepository;
     private final ProductRepository productRepository;
-
-    public UpdateCartItemServiceImpl(CartItemRepository cartItemRepository, ProductRepository productRepository) {
-        this.cartItemRepository = cartItemRepository;
-        this.productRepository = productRepository;
-    }
+    private final DeleteCartItemService deleteCartItemService;
 
     private Product getValidProduct(Long productId) {
         Product product = productRepository.findByIdAndDeletedAtIsNull(productId)
@@ -37,35 +43,52 @@ public class UpdateCartItemServiceImpl implements UpdateCartItemService {
     }
 
     @Transactional
-    public CartItem addCartItem(Long cartItemId, Long cartId, Long productId, UpdateCartItemRequestDTO req) {
+    public CartItem addCartItem(Long productId) {
+        Long userId = Claims.getUserIdFromJwt();
+
+        Cart existingActiveCart = cartRepository.findActiveCartByUserId(userId);
+
         Product product = getValidProduct(productId);
 
-        CartItem currentCartItem = cartItemRepository.findById(cartItemId)
-                .orElseThrow(() -> new DataNotFoundException("Cart item not found!"));
-
-        if (currentCartItem.getQuantity().compareTo(product.getTotalStock()) >= 0) {
-            throw new StockLimitException("Stock limit hit!");
+        Optional<CartItem> currentCartItem = cartItemRepository.findByActiveCartIdAndProductId(existingActiveCart.getId(),product.getId());
+        if (currentCartItem.isEmpty()) {
+            throw new DataNotFoundException("Cart item not found !");
         }
 
-        currentCartItem.setQuantity(currentCartItem.getQuantity().add(BigDecimal.ONE));
-        currentCartItem.setTotalAmount(currentCartItem.getQuantity().multiply(product.getPrice()));
+        CartItem cartItem = currentCartItem.get();
 
-        return cartItemRepository.save(currentCartItem);
+        if (cartItem.getQuantity().compareTo(product.getTotalStock()) >= 0) {
+            throw new StockLimitException("Hit stock limit !");
+        }
+
+        cartItem.setQuantity(cartItem.getQuantity().add(BigDecimal.ONE));
+        cartItem.setTotalAmount(cartItem.getQuantity().multiply(product.getPrice()));
+
+        return cartItemRepository.save(cartItem);
     }
 
     @Transactional
-    public void subtractCartItem(Long cartItemId, Long cartId, Long productId, UpdateCartItemRequestDTO req) {
+    public CartItem subtractCartItem(Long productId) {
+        Long userId = Claims.getUserIdFromJwt();
+
+        Cart existingActiveCart = cartRepository.findActiveCartByUserId(userId);
+
         Product product = getValidProduct(productId);
 
-        CartItem currentCartItem = cartItemRepository.findById(cartItemId)
-                .orElseThrow(() -> new DataNotFoundException("Cart item not found!"));
+        Optional<CartItem> currentCartItem = cartItemRepository.findByActiveCartIdAndProductId(existingActiveCart.getId(),product.getId());
+        if (currentCartItem.isEmpty()) {
+            throw new DataNotFoundException("Cart item not found !");
+        }
 
-        if (currentCartItem.getQuantity().compareTo(BigDecimal.ONE) == 0) {
-            cartItemRepository.delete(currentCartItem);
+        CartItem cartItem = currentCartItem.get();
+
+        if (cartItem.getQuantity().compareTo(BigDecimal.ONE) == 0) {
+            deleteCartItemService.removeCartItem(cartItem.getId());
+            throw new RuntimeException("Item removed from cart !");
         } else {
-            currentCartItem.setQuantity(currentCartItem.getQuantity().subtract(BigDecimal.ONE));
-            currentCartItem.setTotalAmount(currentCartItem.getQuantity().multiply(product.getPrice()));
-            cartItemRepository.save(currentCartItem);
+            cartItem.setQuantity(cartItem.getQuantity().subtract(BigDecimal.ONE));
+            cartItem.setTotalAmount(cartItem.getQuantity().multiply(product.getPrice()));
+            return cartItemRepository.save(cartItem);
         }
     }
 }

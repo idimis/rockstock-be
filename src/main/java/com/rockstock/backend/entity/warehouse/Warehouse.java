@@ -1,7 +1,11 @@
 package com.rockstock.backend.entity.warehouse;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.rockstock.backend.entity.geolocation.City;
-import com.rockstock.backend.entity.stock.StockJournal;
+import com.rockstock.backend.entity.geolocation.SubDistrict;
+import com.rockstock.backend.entity.order.Order;
+import com.rockstock.backend.entity.stock.MutationJournal;
 import com.rockstock.backend.entity.stock.WarehouseStock;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -74,19 +78,28 @@ public class Warehouse {
     }
 
     // Relationships
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "city_id", nullable = false)
-    private City city;
+    @JoinColumn(name = "sub_district_id", nullable = false)
+    private SubDistrict subDistrict;
 
-    @OneToMany(mappedBy = "warehouse", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<WarehouseAdmin> warehouseAdmins = new HashSet<>();
-
-    @OneToMany(mappedBy = "warehouse", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<WarehouseStock> warehouseStocks = new HashSet<>();
-
-    @OneToMany(mappedBy = "originWarehouse", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<StockJournal> originStockJournals = new HashSet<>();
-
-    @OneToMany(mappedBy = "destinationWarehouse", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<StockJournal> destinationStockJournals = new HashSet<>();
+//    @JsonManagedReference
+//    @OneToMany(mappedBy = "warehouse", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    private Set<WarehouseAdmin> warehouseAdmins = new HashSet<>();
+//
+//    @JsonManagedReference
+//    @OneToMany(mappedBy = "warehouse", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    private Set<WarehouseStock> warehouseStocks = new HashSet<>();
+//
+//    @JsonManagedReference
+//    @OneToMany(mappedBy = "originWarehouse", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    private Set<MutationJournal> originMutationJournals = new HashSet<>();
+//
+//    @JsonManagedReference
+//    @OneToMany(mappedBy = "destinationWarehouse", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    private Set<MutationJournal> destinationMutationJournals = new HashSet<>();
+//
+//    @JsonManagedReference
+//    @OneToMany(mappedBy = "warehouse", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    private Set<Order> orders = new HashSet<>();
 }

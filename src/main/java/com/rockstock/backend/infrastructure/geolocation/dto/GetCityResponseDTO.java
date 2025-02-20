@@ -12,13 +12,11 @@ public class GetCityResponseDTO {
 
     private Long id;
     private String name;
-    private String type;
     private Long provinceId;
 
     public GetCityResponseDTO(City city) {
         this.id = city.getId();
         this.name = city.getName();
-        this.type = city.getType();
         this.provinceId = city.getProvince().getId();
     }
 }

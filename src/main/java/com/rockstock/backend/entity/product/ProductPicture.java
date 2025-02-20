@@ -1,5 +1,6 @@
 package com.rockstock.backend.entity.product;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,10 @@ public class ProductPicture {
     @NotNull
     @Column(name = "product_picture_url", nullable = false)
     private String productPictureUrl;
+
+    @NotNull
+    @Column(nullable = false)
+    private Integer position;
 
     @NotNull
     @ColumnDefault("false")
@@ -62,6 +67,7 @@ public class ProductPicture {
     }
 
     // Relationships
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;

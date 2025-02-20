@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class GetCartResponseDTO {
 
     private Long cartId;
-    private boolean isActive;
+    private Boolean isActive;
     private Long userId;
 
     public GetCartResponseDTO(Cart cart) {

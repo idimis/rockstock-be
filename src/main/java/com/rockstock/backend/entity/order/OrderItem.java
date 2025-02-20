@@ -1,5 +1,6 @@
 package com.rockstock.backend.entity.order;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.rockstock.backend.entity.product.Product;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -63,10 +64,12 @@ public class OrderItem {
     }
 
     // Relationships
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;

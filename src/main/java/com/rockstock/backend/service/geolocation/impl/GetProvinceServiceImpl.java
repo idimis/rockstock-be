@@ -12,30 +12,41 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class GetProvinceServiceImpl implements GetProvinceService {
+
     private final ProvinceRepository provinceRepository;
 
     @Override
-    public List<GetProvinceResponseDTO> getProvinceByName(String name) {
-        List<Province> foundProvinces = provinceRepository.findByNameContainingIgnoreCase(name);
-        if (foundProvinces.isEmpty()){
-            throw new DataNotFoundException("Province(s) with query " + name + " not found !");
+    @Transactional
+    public List<Province> getAllProvinces() {return provinceRepository.findAll(); }
+
+    @Override
+    @Transactional
+    public Optional<Province> getByProvinceName(String name) {
+        Optional<Province> provinceName = provinceRepository.findByNameContainingIgnoreCase(name);
+        if (provinceName.isEmpty()){
+            throw new DataNotFoundException("Province not found !");
         }
-        return foundProvinces.stream().map(GetProvinceResponseDTO::new).toList();
+        return provinceName;
     }
 
     @Override
-    public List<GetProvinceResponseDTO> getAllProvinces() {
-        return provinceRepository.findAll()
-                .stream()
-                .map(province -> new GetProvinceResponseDTO(province.getId(), province.getName()))
-                .collect(Collectors.toList());
+    @Transactional
+    public Optional<Province> getByProvinceId(Long provinceId) {
+        Optional<Province> province = provinceRepository.findById(provinceId);
+        if (province.isEmpty()){
+            throw new DataNotFoundException("Province not found !");
+        }
+        return province;
     }
+
+
 
 
 }

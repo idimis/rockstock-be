@@ -12,12 +12,15 @@ import java.util.Optional;
 @Repository
 public interface CartItemRepository extends JpaRepository<CartItem, Long> {
 
-    @Query("SELECT a FROM CartItem a WHERE a.cart.id = :cartId AND a.cart.isActive = true")
-    List<CartItem> findAllByActiveCartAndCartId(Long cartId, boolean isActive);
+    @Query("SELECT ci FROM CartItem ci WHERE ci.cart.id = :cartId AND ci.cart.isActive = true")
+    List<CartItem> findAllByActiveCartId(Long cartId);
 
-    @Query("SELECT a FROM CartItem a WHERE a.cart.id = :cartId AND a.product = :productId AND a.cart.isActive = true")
-    Optional<CartItem> findByActiveCartAndCartIdAndProductId(Long cartId, Long productId, boolean isActive);
+    @Query("SELECT ci FROM CartItem ci WHERE ci.cart.id = :cartId AND ci.product.id = :productId AND ci.cart.isActive = true")
+    Optional<CartItem> findByActiveCartIdAndProductId(Long cartId, Long productId);
 
-    @Query("SELECT a FROM CartItem a WHERE a.cart.id = :cartId AND a.id = : cartItemId")
-    Optional<CartItem> findByIdAndCartId(Long cartId, Long cartItemId);
+    @Query("SELECT ci FROM CartItem ci WHERE ci.cart.id = :cartId AND ci.product.productName = :name AND ci.cart.isActive = true")
+    Optional<CartItem> findByActiveCartIdAndProductName(Long cartId, String name);
+
+    @Query("SELECT ci FROM CartItem ci WHERE ci.cart.id = :cartId AND ci.id = : cartItemId")
+    Optional<CartItem> findByIdAndCartId(Long cartItemId, Long cartId);
 }

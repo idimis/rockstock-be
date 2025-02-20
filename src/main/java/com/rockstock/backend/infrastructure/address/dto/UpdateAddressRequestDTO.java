@@ -12,6 +12,6 @@ public class UpdateAddressRequestDTO {
     private String longitude;
     private String latitude;
     private String note;
-    private boolean isMain;
-    private Long cityId;
+    private Boolean isMain;
+    private Long subDistrictId;
 }

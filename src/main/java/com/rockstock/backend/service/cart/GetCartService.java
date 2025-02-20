@@ -6,6 +6,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface GetCartService {
-    List<Cart> getAllByUserId(Long userId);
-    Optional<Cart> getActiveCartByUserId(Long userId, boolean isActive);
+    Cart getActiveCartByUserId(Long userId);
 }

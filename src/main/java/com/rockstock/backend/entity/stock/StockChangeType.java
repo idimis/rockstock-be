@@ -1,5 +1,6 @@
 package com.rockstock.backend.entity.stock;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,7 +27,7 @@ public class StockChangeType {
     private Long id;
 
     @Column(name = "change_type", nullable = false)
-    private String changeType;
+    private Enum<ChangeTypeList> changeType;
 
     @Column(nullable = false)
     private String detail;
@@ -59,6 +60,7 @@ public class StockChangeType {
     }
 
     // Relationships
-    @OneToMany(mappedBy = "stockChangeType", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<StockJournal> stockJournals = new HashSet<>();
+//    @JsonManagedReference
+//    @OneToMany(mappedBy = "stockChangeType", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    private Set<MutationJournal> mutationJournals = new HashSet<>();
 }

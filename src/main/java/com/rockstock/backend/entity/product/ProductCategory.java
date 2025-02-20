@@ -1,5 +1,6 @@
 package com.rockstock.backend.entity.product;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -62,6 +63,7 @@ public class ProductCategory {
     }
 
     // Relationships
-    @OneToMany(mappedBy = "productCategory", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Product> products = new HashSet<>();
+//    @JsonManagedReference
+//    @OneToMany(mappedBy = "productCategory", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private Set<Product> products = new HashSet<>();
 }
