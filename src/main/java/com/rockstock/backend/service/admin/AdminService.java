@@ -1,4 +1,4 @@
-//package com.rockstock.backend.service.admin;
+package com.rockstock.backend.service.admin;//package com.rockstock.backend.service.admin;
 //
 //import com.rockstock.backend.entity.warehouse.WarehouseAdmin;
 //import com.rockstock.backend.infrastructure.admin.dto.AdminUserResponse;

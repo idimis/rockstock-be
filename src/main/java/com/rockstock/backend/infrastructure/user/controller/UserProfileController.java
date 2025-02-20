@@ -1,4 +1,4 @@
-//package com.rockstock.backend.infrastructure.user.controller;
+package com.rockstock.backend.infrastructure.user.controller;//package com.rockstock.backend.infrastructure.user.controller;
 //
 //import com.rockstock.backend.infrastructure.user.dto.UpdateProfileRequest;
 //import com.rockstock.backend.service.user.UserProfileService;

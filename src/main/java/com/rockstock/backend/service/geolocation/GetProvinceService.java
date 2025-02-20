@@ -1,6 +1,5 @@
 package com.rockstock.backend.service.geolocation;
 
-import com.rockstock.backend.infrastructure.geolocation.dto.GetCityResponseDTO;
 import com.rockstock.backend.infrastructure.geolocation.dto.GetProvinceResponseDTO;
 
 import java.util.List;

@@ -1,17 +1,17 @@
 package com.rockstock.backend.service.user.impl;
 
 import com.rockstock.backend.entity.user.User;
-import com.rockstock.backend.infrastructure.user.repository.UserRepository;
 import com.rockstock.backend.infrastructure.user.dto.ChangePasswordRequest;
 import com.rockstock.backend.infrastructure.user.dto.UpdateProfileRequest;
 import com.rockstock.backend.infrastructure.user.dto.UploadAvatarResponse;
 import com.rockstock.backend.infrastructure.user.dto.UserProfileResponse;
+import com.rockstock.backend.infrastructure.user.repository.UserRepository;
 import com.rockstock.backend.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor

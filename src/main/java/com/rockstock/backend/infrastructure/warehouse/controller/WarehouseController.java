@@ -1,4 +1,4 @@
-//package com.rockstock.backend.infrastructure.warehouse.controller;
+package com.rockstock.backend.infrastructure.warehouse.controller;//package com.rockstock.backend.infrastructure.warehouse.controller;
 //
 //import com.rockstock.backend.infrastructure.warehouse.DTO.WarehouseCreateRequestDTO;
 //import com.rockstock.backend.infrastructure.warehouse.DTO.WarehouseResponseDTO;

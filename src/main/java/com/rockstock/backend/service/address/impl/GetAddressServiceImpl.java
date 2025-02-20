@@ -3,7 +3,6 @@ package com.rockstock.backend.service.address.impl;
 import com.rockstock.backend.common.exceptions.DataNotFoundException;
 import com.rockstock.backend.entity.geolocation.Address;
 import com.rockstock.backend.infrastructure.address.repository.AddressRepository;
-import com.rockstock.backend.infrastructure.user.repository.UserRepository;
 import com.rockstock.backend.service.address.GetAddressService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

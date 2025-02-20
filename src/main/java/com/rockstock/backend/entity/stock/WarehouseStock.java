@@ -25,10 +25,10 @@ public class WarehouseStock {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "warehouse_stock_id_gen")
     @SequenceGenerator(name = "warehouse_stock_id_gen", sequenceName = "warehouse_stock_id_seq", schema = "rockstock", allocationSize = 1)
     @Column(name = "warehouse_stock_id", nullable = false)
-    private Long id;
+    private Long stockId;
 
-    @Column(nullable = false)
-    private Long stock;
+    @Column(name = "stock_quantity", nullable = false)
+    private Long stockQuantity;
 
     @Column(name = "deleted_at")
     private OffsetDateTime deletedAt;
@@ -67,5 +67,5 @@ public class WarehouseStock {
     private Product product;
 
     @OneToMany(mappedBy = "warehouseStock", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<StockJournal> stockJournals = new HashSet<>();
+    private Set<MutationJournal> mutationJournals = new HashSet<>();
 }

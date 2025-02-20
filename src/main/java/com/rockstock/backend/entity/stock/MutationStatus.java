@@ -17,13 +17,13 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class StockStatus {
+public class MutationStatus {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stock_status_id_gen")
-    @SequenceGenerator(name = "stock_status_id_gen", sequenceName = "stock_status_id_seq", schema = "rockstock", allocationSize = 1)
-    @Column(name = "stock_status_id", nullable = false)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mutation_status_id_gen")
+    @SequenceGenerator(name = "mutation_status_id_gen", sequenceName = "mutation_status_id_seq", schema = "rockstock", allocationSize = 1)
+    @Column(name = "mutation_status_id", nullable = false)
+    private Long statusId;
 
     @Column(nullable = false)
     private String status;
@@ -56,6 +56,6 @@ public class StockStatus {
     }
 
     // Relationships
-    @OneToMany(mappedBy = "stockStatus", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<StockJournal> stockJournals = new HashSet<>();
+    @OneToMany(mappedBy = "mutationStatus", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<MutationJournal> mutationJournals = new HashSet<>();
 }

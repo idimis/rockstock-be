@@ -11,21 +11,21 @@ import org.hibernate.annotations.ColumnDefault;
 import java.time.OffsetDateTime;
 
 @Entity
-@Table(name = "stock_journals", schema = "rockstock")
+@Table(name = "mutation_journals", schema = "rockstock")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class StockJournal {
+public class MutationJournal {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stock_journal_id_gen")
-    @SequenceGenerator(name = "stock_journal_id_gen", sequenceName = "stock_journal_id_seq", schema = "rockstock", allocationSize = 1)
-    @Column(name = "stock_journal_id", nullable = false)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mutation_journal_id_gen")
+    @SequenceGenerator(name = "mutation_journal_id_gen", sequenceName = "mutation_journal_id_seq", schema = "rockstock", allocationSize = 1)
+    @Column(name = "mutation_journal_id", nullable = false)
+    private Long journalId;
 
-    @Column(nullable = false)
-    private Long quantity;
+    @Column(name = "mutation_quantity", nullable = false)
+    private Long mutationQuantity;
 
     @Column(name = "previous_stock_quantity", nullable = false)
     private Long previousStockQuantity;
@@ -72,6 +72,6 @@ public class StockJournal {
     private StockChangeType stockChangeType;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "stock_statuses_id", nullable = false)
-    private StockStatus stockStatus;
+    @JoinColumn(name = "mutation_statuses_id", nullable = false)
+    private MutationStatus mutationStatus;
 }

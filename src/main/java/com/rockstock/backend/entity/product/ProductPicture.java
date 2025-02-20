@@ -1,5 +1,6 @@
 package com.rockstock.backend.entity.product;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -21,7 +22,7 @@ public class ProductPicture {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_picture_id_gen")
     @SequenceGenerator(name = "product_picture_id_gen", sequenceName = "product_picture_id_seq", schema = "rockstock", allocationSize = 1)
     @Column(name = "product_picture_id", nullable = false)
-    private Long id;
+    private Long pictureId;
 
     @NotNull
     @Column(name = "product_picture_url", nullable = false)
@@ -31,6 +32,10 @@ public class ProductPicture {
     @ColumnDefault("false")
     @Column(name = "is_main", nullable = false)
     private Boolean isMain = false;
+
+    @NotNull
+    @Column(name = "position", nullable = false)
+    private Integer position;
 
     @Column(name = "deleted_at")
     private OffsetDateTime deletedAt;
@@ -62,6 +67,7 @@ public class ProductPicture {
     }
 
     // Relationships
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;

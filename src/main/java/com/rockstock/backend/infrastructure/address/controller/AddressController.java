@@ -1,21 +1,16 @@
 package com.rockstock.backend.infrastructure.address.controller;
 
 import com.rockstock.backend.common.response.ApiResponse;
-import com.rockstock.backend.entity.geolocation.Address;
 import com.rockstock.backend.infrastructure.address.dto.CreateAddressRequestDTO;
-import com.rockstock.backend.infrastructure.address.dto.GetAddressResponseDTO;
 import com.rockstock.backend.infrastructure.address.dto.UpdateAddressRequestDTO;
 import com.rockstock.backend.service.address.CreateAddressService;
 import com.rockstock.backend.service.address.DeleteAddressService;
 import com.rockstock.backend.service.address.GetAddressService;
 import com.rockstock.backend.service.address.UpdateAddressService;
-import com.rockstock.backend.service.address.impl.GetAddressServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/address")
