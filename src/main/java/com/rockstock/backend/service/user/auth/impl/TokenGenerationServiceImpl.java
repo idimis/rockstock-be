@@ -1,7 +1,9 @@
 package com.rockstock.backend.service.user.auth.impl;
 
 import com.rockstock.backend.common.exceptions.DataNotFoundException;
+import com.rockstock.backend.entity.user.Role;
 import com.rockstock.backend.entity.user.User;
+import com.rockstock.backend.entity.user.UserRole;
 import com.rockstock.backend.infrastructure.user.repository.UserRepository;
 import com.rockstock.backend.service.user.auth.TokenGenerationService;
 import org.springframework.security.core.Authentication;
@@ -10,6 +12,8 @@ import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class TokenGenerationServiceImpl implements TokenGenerationService {
@@ -17,8 +21,8 @@ public class TokenGenerationServiceImpl implements TokenGenerationService {
     private final UserRepository userRepository;
     private final JwtDecoder jwtDecoder;
 
-    private final long ACCESS_TOKEN_EXPIRY = 3600L;
-    private final long REFRESH_TOKEN_EXPIRY = 86400L;
+    private final long ACCESS_TOKEN_EXPIRY = 3600L; // 1 hours
+    private final long REFRESH_TOKEN_EXPIRY = 86400L; // 24 hours
 
     public TokenGenerationServiceImpl(JwtEncoder jwtEncoder, UserRepository userRepository, JwtDecoder jwtDecoder) {
         this.jwtEncoder = jwtEncoder;
@@ -36,16 +40,20 @@ public class TokenGenerationServiceImpl implements TokenGenerationService {
         User user = userRepository.findByEmailContainsIgnoreCase(email)
                 .orElseThrow(() -> new DataNotFoundException("User not found"));
 
-        String scope = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .reduce((a, b) -> a + " " + b)
-                .orElse("");
+//        String scope = authentication.getAuthorities().stream()
+//               .map(GrantedAuthority::getAuthority)
+//                .reduce((a, b) -> a + " " + b)
+//               .orElse("");
+
+        String roles = user.getUserRoles().stream()
+                .map(userRole -> userRole.getRole().getName())
+                .collect(Collectors.joining(" "));
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(expiry))
                 .subject(email)
-                .claim("scope", scope)
+                .claim("scope", roles)
                 .claim("userId", user.getId())
                 .claim("type", tokenType.name())
                 .build();

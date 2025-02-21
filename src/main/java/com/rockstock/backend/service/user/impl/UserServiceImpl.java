@@ -1,11 +1,13 @@
 package com.rockstock.backend.service.user.impl;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.rockstock.backend.entity.user.User;
+import com.rockstock.backend.infrastructure.user.auth.security.Claims;
 import com.rockstock.backend.infrastructure.user.repository.UserRepository;
 import com.rockstock.backend.infrastructure.user.dto.ChangePasswordRequest;
 import com.rockstock.backend.infrastructure.user.dto.UpdateProfileRequest;
-import com.rockstock.backend.infrastructure.user.dto.UploadAvatarResponse;
-import com.rockstock.backend.infrastructure.user.dto.UserProfileResponse;
+import com.rockstock.backend.infrastructure.user.dto.UploadAvatarResponseDTO;
 import com.rockstock.backend.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,22 +15,51 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
-@Transactional
+
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final Cloudinary cloudinary;
+
+    private boolean isValidFileType(MultipartFile file) {
+        String contentType = file.getContentType();
+        return contentType != null && (contentType.contains("jpeg") || contentType.contains("jpg") ||
+                contentType.contains("png") || contentType.contains("gif"));
+    }
+
+    @SuppressWarnings("unchecked")
+    private String uploadToCloudinary(MultipartFile file) throws IOException {
+        if (file.isEmpty()) {
+            throw new RuntimeException("File is empty");
+        }
+        if (!isValidFileType(file)) {
+            throw new IllegalArgumentException("Invalid file type. Only .jpg, .jpeg, .png, and .gif are allowed.");
+        }
+
+        if (file.getSize() > 2 * 1024 * 1024) {
+            throw new IllegalArgumentException("File size must be less than 1MB.");
+        }
+
+        Map<String, Object> uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
+        return (String) uploadResult.get("secure_url");
+    }
 
     @Override
-    public UserProfileResponse getUserProfile(Long userId) {
+    public User getUserProfile() {
+        Long userId = Claims.getUserIdFromJwt();
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        return new UserProfileResponse(user.getId(), user.getFullname(), user.getEmail(),
-                user.getPhotoProfileUrl(), user.getBirthDate(), user.getGender(), user.getIsVerified());
+        return user;
     }
+
 
     @Override
     public void updateUserProfile(Long userId, UpdateProfileRequest request) {
@@ -60,32 +91,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UploadAvatarResponse uploadAvatar(Long userId, MultipartFile file) {
-        if (file.isEmpty()) {
-            throw new RuntimeException("File is empty");
+    public UploadAvatarResponseDTO uploadAvatar(Long userId, MultipartFile file) {
+        String imageUrl;
+        try {
+            imageUrl = uploadToCloudinary(file);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to upload image to Cloudinary." + e.getMessage());
         }
-
-        String contentType = file.getContentType();
-        if (contentType == null ||
-                !(contentType.equals("image/jpeg") || contentType.equals("image/png") || contentType.equals("image/gif"))) {
-            throw new RuntimeException("Invalid file format. Allowed formats: .jpg, .jpeg, .png, .gif");
-        }
-
-        if (file.getSize() > 1024 * 1024) {
-            throw new RuntimeException("File size exceeds 1MB limit");
-        }
-
-        // TODO: Implement file storage logic (S3, Cloudinary, Local Storage)
-        String uploadedUrl = "https://example.com/avatar/" + userId; // Placeholder
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        user.setPhotoProfileUrl(uploadedUrl);
+        user.setPhotoProfileUrl(imageUrl);
         userRepository.save(user);
 
-        return new UploadAvatarResponse(uploadedUrl);
+        return new UploadAvatarResponseDTO(imageUrl);
     }
+
 
     @Override
     public void updateEmail(Long userId, String newEmail) {

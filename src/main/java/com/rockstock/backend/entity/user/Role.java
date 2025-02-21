@@ -1,5 +1,6 @@
 package com.rockstock.backend.entity.user;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,8 @@ import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.OffsetDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "roles", schema = "rockstock")
@@ -50,4 +53,10 @@ public class Role {
     protected void onUpdate() {
         updatedAt = OffsetDateTime.now();
     }
+
+    // Relationships
+    @JsonManagedReference
+    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<UserRole> userRoles = new HashSet<>();
+
 }

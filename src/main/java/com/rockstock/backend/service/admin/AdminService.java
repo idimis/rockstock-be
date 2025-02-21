@@ -45,7 +45,7 @@ public class AdminService {
         User admin = new User();
         admin.setEmail(request.getEmail());
         admin.setPassword(passwordEncoder.encode(request.getPassword()));
-        admin.setAdmin(true);
+        admin.setIsAdmin(true);
         admin.setFullname(request.getFullname());
 
         User savedUser = userRepository.save(admin);

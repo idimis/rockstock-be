@@ -5,10 +5,11 @@ import com.rockstock.backend.infrastructure.user.dto.*;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
-    UserProfileResponse getUserProfile(Long userId);
+    User getUserProfile();
     void updateUserProfile(Long userId, UpdateProfileRequest request);
     void changePassword(Long userId, ChangePasswordRequest request);
-    UploadAvatarResponse uploadAvatar(Long userId, MultipartFile file);
+    UploadAvatarResponseDTO uploadAvatar(Long userId, MultipartFile file);
     void updateEmail(Long userId, String newEmail);
     void resendEmailVerification(Long userId);
+
 }
