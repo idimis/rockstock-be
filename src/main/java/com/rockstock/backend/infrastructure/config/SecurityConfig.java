@@ -70,6 +70,10 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/auth/forgot-password").permitAll()
                         .requestMatchers("/api/v1/auth/reset-password").permitAll()
                         .requestMatchers("/api/v1/auth/verify-email").permitAll()
+                        .requestMatchers("/api/v1/products").permitAll()
+                        .requestMatchers("/api/v1/products/{id}").permitAll()
+                        .requestMatchers("/api/v1/products/update/{id}").permitAll()
+                        .requestMatchers("/api/v1/pictures/create").permitAll()
                         // private endpoints
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

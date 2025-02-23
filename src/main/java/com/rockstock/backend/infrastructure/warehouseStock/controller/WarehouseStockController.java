@@ -1,16 +1,11 @@
 package com.rockstock.backend.infrastructure.warehouseStock.controller;
 
-import com.rockstock.backend.entity.stock.WarehouseStock;
-import com.rockstock.backend.infrastructure.warehouseStock.dto.WarehouseStockRequestDTO;
+import com.rockstock.backend.infrastructure.warehouseStock.dto.WarehouseStockResponseDTO;
 import com.rockstock.backend.service.warehouseStock.WarehouseStockService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/warehouse-stocks")
@@ -20,15 +15,24 @@ public class WarehouseStockController {
     private final WarehouseStockService warehouseStockService;
 
     @PostMapping("/create")
-    public ResponseEntity<?> createWarehouseStock(@RequestBody @Valid WarehouseStockRequestDTO requestDTO) {
-        try {
-            WarehouseStock warehouseStock = warehouseStockService.createWarehouseStockIfNotExists(
-                    requestDTO.getProductId(),
-                    requestDTO.getWarehouseId()
-            );
-            return ResponseEntity.status(HttpStatus.CREATED).body(warehouseStock);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+    public ResponseEntity<WarehouseStockResponseDTO> createWarehouseStock(
+            @RequestParam Long productId,
+            @RequestParam Long warehouseId) {
+        WarehouseStockResponseDTO response = warehouseStockService.createWarehouseStock(productId, warehouseId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+    @PutMapping("/{stockId}/soft-delete")
+    public ResponseEntity<String> softDeleteWarehouseStock(@PathVariable Long stockId) {
+        warehouseStockService.softDeleteWarehouseStock(stockId);
+        return ResponseEntity.ok("WarehouseStock soft deleted successfully.");
+    }
+
+    @PutMapping("/{stockId}/restore")
+    public ResponseEntity<String> restoreWarehouseStock(@PathVariable Long stockId) {
+        warehouseStockService.restoreWarehouseStock(stockId);
+        return ResponseEntity.ok("WarehouseStock restored successfully.");
+    }
+
+
 }

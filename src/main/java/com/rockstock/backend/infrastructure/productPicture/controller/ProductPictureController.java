@@ -1,12 +1,12 @@
 package com.rockstock.backend.infrastructure.productPicture.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rockstock.backend.common.response.ApiResponse;
-import com.rockstock.backend.infrastructure.productPicture.dto.CreateProductPictureRequestDTO;
-import com.rockstock.backend.infrastructure.productPicture.dto.CreateProductPictureResponseDTO;
-import com.rockstock.backend.service.product.ProductPictureService;
-import jakarta.validation.Valid;
+import com.rockstock.backend.infrastructure.productPicture.dto.*;
+import com.rockstock.backend.service.productPicture.ProductPictureService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,46 +14,52 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/v1/pictures")
 @RequiredArgsConstructor
-@RequestMapping("api/v1/pictures")
 public class ProductPictureController {
     private final ProductPictureService productPictureService;
 
-    @PostMapping("/{productId}/upload")
+    @PostMapping("/create")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<ApiResponse<CreateProductPictureResponseDTO>> createProductPicture(
-            @PathVariable Long productId,  // Extract productId from the path
-            @RequestPart("file") MultipartFile file,
-            @RequestPart("data") @Valid CreateProductPictureRequestDTO createProductPictureRequestDTO) throws IOException {
+            @RequestParam("file") MultipartFile file,
+            @RequestPart("request") String requestJson) throws IOException {
 
-        // Set the productId inside the request DTO
-        createProductPictureRequestDTO.setProductId(productId);
+        ObjectMapper objectMapper = new ObjectMapper();
+        CreateProductPictureRequestDTO requestDTO = objectMapper.readValue(requestJson, CreateProductPictureRequestDTO.class);
 
-        // Call service to handle the creation of the product picture
-        CreateProductPictureResponseDTO responseDTO = productPictureService.createProductPicture(createProductPictureRequestDTO, file);
-
-        return ApiResponse.success("Picture added successfully", responseDTO);
+        CreateProductPictureResponseDTO response = productPictureService.createProductPicture(requestDTO, file);
+        return ApiResponse.success("Create new category success", response);
     }
 
-    @DeleteMapping("/{pictureId}")
-    public ResponseEntity<ApiResponse<Void>> deleteProductPicture(@PathVariable Long pictureId) {
-        productPictureService.deleteProductPicture(pictureId);
-        return ApiResponse.success("Picture deleted successfully", null);
+    // 📌 Update Picture Position (Drag & Drop Reordering)
+    @PatchMapping("/update-position")
+    public ResponseEntity<UpdatePicturePositionResponseDTO> updateProductPicturePosition(
+            @RequestBody UpdatePicturePositionRequestDTO requestDTO) {
+        UpdatePicturePositionResponseDTO responseDTO = productPictureService.updateProductPicturePosition(requestDTO);
+        return ResponseEntity.ok(responseDTO);
     }
 
-    @PutMapping("/{productId}/{pictureId}/set-main")
-    public ResponseEntity<ApiResponse<Void>> updateMainPicture(
+    // 📌 Get All Product Pictures
+    @GetMapping("/{productId}")
+    public ResponseEntity<List<GetProductPicturesResponseDTO>> getAllProductPictures(@PathVariable Long productId) {
+        List<GetProductPicturesResponseDTO> pictures = productPictureService.getAllProductPictures(productId);
+        return ResponseEntity.ok(pictures);
+    }
+
+    @PatchMapping("/{productId}/{pictureId}/soft-delete")
+    public ResponseEntity<String> softDeleteProductPicture(
             @PathVariable Long productId,
             @PathVariable Long pictureId) {
-
-        productPictureService.updateMainPicture(productId, pictureId);
-        return ApiResponse.success("Main picture updated successfully", null);
+        productPictureService.softDeleteProductPicture(productId, pictureId);
+        return ResponseEntity.ok("Product picture soft deleted successfully.");
     }
 
-    @GetMapping("/{productId}")
-    public ResponseEntity<ApiResponse<List<CreateProductPictureResponseDTO>>> getProductPictures(
-            @PathVariable Long productId) {
-        List<CreateProductPictureResponseDTO> pictures = productPictureService.getProductPicturesByProductId(productId);
-
-        return ApiResponse.success("Fetched product pictures successfully", pictures);
+    @PatchMapping("/{productId}/{pictureId}/restore")
+    public ResponseEntity<String> restoreProductPicture(
+            @PathVariable Long productId,
+            @PathVariable Long pictureId) {
+        productPictureService.restoreProductPicture(productId, pictureId);
+        return ResponseEntity.ok("Product picture restored successfully.");
     }
 }

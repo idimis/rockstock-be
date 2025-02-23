@@ -7,19 +7,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/v1/stocks")
+@RequestMapping("api/v1/mutations")
 @RequiredArgsConstructor
 public class MutationController {
 
     private final MutationService mutationService;
 
-    @PostMapping("/transfer-stock")
+    @PostMapping("/request")
     public ResponseEntity<String> createTransferStock(@RequestBody MutationRequestDTO requestDTO) {
         mutationService.mutationRequestService(requestDTO);
         return ResponseEntity.ok("Stock transfer request created successfully. Awaiting approval.");
     }
 
-    @PutMapping("/approve-transfer/{journalId}")
+    @PutMapping("/process")
     public ResponseEntity<String> approveTransfer(
             @PathVariable Long journalId,
             @RequestParam boolean isApproved) {

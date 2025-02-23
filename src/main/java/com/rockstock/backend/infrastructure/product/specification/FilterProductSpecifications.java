@@ -1,6 +1,7 @@
 package com.rockstock.backend.infrastructure.product.specification;
 
 import com.rockstock.backend.entity.product.Product;
+import com.rockstock.backend.entity.product.ProductStatus;
 import org.springframework.data.jpa.domain.Specification;
 
 public class FilterProductSpecifications {
@@ -20,5 +21,10 @@ public class FilterProductSpecifications {
             }
             return criteriaBuilder.like(criteriaBuilder.lower(root.get("productCategory").get("categoryName")), "%" + category.toLowerCase() + "%");
         };
+    }
+
+    public static Specification<Product> hasStatus(ProductStatus status) {
+        return (root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get("status"), status);
     }
 }

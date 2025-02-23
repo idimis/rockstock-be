@@ -1,14 +1,12 @@
 package com.rockstock.backend.infrastructure.product.controller;
 
-import com.rockstock.backend.common.response.ApiResponse;
-import com.rockstock.backend.entity.product.Product;
-import com.rockstock.backend.infrastructure.product.dto.CreateProductRequestDTO;
-import com.rockstock.backend.infrastructure.product.dto.CreateProductResponseDTO;
-import com.rockstock.backend.service.product.ProductService;
-import jakarta.validation.Valid;
+import com.rockstock.backend.infrastructure.product.dto.*;
+import com.rockstock.backend.service.product.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -17,54 +15,72 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class ProductController {
 
-    private final ProductService productService;
-
-    // Create
-    @PostMapping
-    public ResponseEntity<ApiResponse<CreateProductResponseDTO>> createProduct(@Valid @RequestBody CreateProductRequestDTO createProductRequestDTO) {
-        CreateProductResponseDTO response = productService.createProduct(createProductRequestDTO);
-        return ApiResponse.success("Product created successfully", response);
+    private final CreateProductService createProductService;
+    private final UpdateProductService updateProductService;
+    private final EditProductService editProductService;
+    private final GetProductService getProductService;
+    private final DeleteProductService deleteProductService;
+    private final RestoreProductService restoreProductService;
+    
+    @PostMapping("/draft")
+    public ResponseEntity<CreateProductResponseDTO> createDraftProduct() {
+        CreateProductResponseDTO response = createProductService.createDraftProduct();
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    // Update Product
-    @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<CreateProductResponseDTO>> updateProduct(@PathVariable Long id, @Valid @RequestBody CreateProductRequestDTO createProductRequestDTO) {
-        CreateProductResponseDTO response = productService.updateProduct(id, createProductRequestDTO);
-        return ApiResponse.success("Product updated successfully", response);
+    @PatchMapping("/update/{id}")
+    public ResponseEntity<UpdateProductResponseDTO> updateProduct(
+            @PathVariable Long id,
+            @RequestBody UpdateProductRequestDTO updateProductRequestDTO) {
+
+        UpdateProductResponseDTO response = updateProductService.updateProduct(id, updateProductRequestDTO);
+        return ResponseEntity.ok(response);
     }
 
-    // Get Product by ID
+    @PatchMapping("/edit/{id}")
+    public ResponseEntity<EditProductResponseDTO> editProduct(
+            @PathVariable Long id,
+            @RequestBody EditProductRequestDTO editProductRequestDTO) {
+
+        EditProductResponseDTO response = editProductService.editProduct(id, editProductRequestDTO);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<CreateProductResponseDTO>> getProductById(@PathVariable Long id) {
-        CreateProductResponseDTO response = productService.getProductById(id);
-        return ApiResponse.success("Product found", response);
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<GetProductResponseDTO> getProductById(@PathVariable Long id) {
+        return ResponseEntity.ok(getProductService.getProductById(id));
     }
 
-    // Get All Products
+    // ✅ Get all products with filters, sorting, and pagination
     @GetMapping
-    public Page<Product> getAllProducts(
-            @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "category", required = false) String category,
-            @RequestParam(value = "sortField", defaultValue = "productName") String sortField,
-            @RequestParam(value = "sortDirection", defaultValue = "ASC") String sortDirection) {
-
-        // Call the service layer to get the paginated and filtered products
-        return productService.getAllProducts(page, size, name, category, sortField, sortDirection);
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<Page<GetAllProductResponseDTO>> getAllProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String category,
+            @RequestParam(defaultValue = "createdAt") String sortField,
+            @RequestParam(defaultValue = "ASC") String sortDirection
+    ) {
+        return ResponseEntity.ok(getProductService.getAllProducts(page, size, name, category, sortField, sortDirection));
     }
 
-    // Soft Delete Product
-    @DeleteMapping("/{id}/soft")
-    public ResponseEntity<ApiResponse<String>> softDeleteProduct(@PathVariable Long id) {
-        productService.softDeleteProduct(id);
-        return ApiResponse.success("Product soft deleted successfully");
+    @PatchMapping("/delete/{id}")
+    public ResponseEntity<String> softDeleteProduct(@PathVariable Long id) {
+        deleteProductService.softDeleteProduct(id);
+        return ResponseEntity.ok("Product deleted successfully");
     }
 
-    // Hard Delete Product
-    @DeleteMapping("/{id}/hard")
-    public ResponseEntity<ApiResponse<String>> hardDeleteProduct(@PathVariable Long id) {
-        productService.hardDeleteProduct(id);
-        return ApiResponse.success("Product hard deleted successfully");
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> hardDeleteProduct(@PathVariable Long id) {
+        deleteProductService.hardDeleteProduct(id);
+        return ResponseEntity.ok("Draft deleted successfully");
+    }
+
+    @PatchMapping("/restore/{id}")
+    public ResponseEntity<String> restoreProduct(@PathVariable Long id) {
+        restoreProductService.restoreProduct(id);
+        return ResponseEntity.ok("Product restored successfully");
     }
 }

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateProductCategoryResponseDTO {
-    private String message;
+    private Long categoryId;
     private String categoryName;
+    private String categoryPicture;
 }

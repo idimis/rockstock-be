@@ -29,11 +29,6 @@ public class ProductPicture {
     private String productPictureUrl;
 
     @NotNull
-    @ColumnDefault("false")
-    @Column(name = "is_main", nullable = false)
-    private Boolean isMain = false;
-
-    @NotNull
     @Column(name = "position", nullable = false)
     private Integer position;
 
