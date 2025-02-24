@@ -35,6 +35,9 @@ public class Order {
     @Column(name = "payment_proof")
     private String paymentProof;
 
+    @Column(name = "order_code")
+    private String orderCode;
+
     @NotNull
     @Column(name = "delivery_cost", nullable = false, precision = 15, scale = 2)
     private BigDecimal deliveryCost;

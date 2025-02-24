@@ -57,7 +57,7 @@ public class CreateCartItemServiceImpl implements CreateCartItemService {
 
         Product product = getValidProduct(req.getProductId());
 
-        Optional<CartItem> existingItem = cartItemRepository.findByActiveCartIdAndProductId(existingActiveCart.getId(), req.getProductId());
+        Optional<CartItem> existingItem = cartItemRepository.findByActiveCartIdAndProductId(existingActiveCart.getId(), product.getId());
         if (existingItem.isPresent()) {
             CartItem cartItem = existingItem.get();
             if (cartItem.getQuantity().compareTo(product.getTotalStock()) >= 0) {

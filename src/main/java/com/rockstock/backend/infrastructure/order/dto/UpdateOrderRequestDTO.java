@@ -1,16 +1,13 @@
 package com.rockstock.backend.infrastructure.order.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.rockstock.backend.entity.order.OrderStatusList;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.math.BigDecimal;
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
+@Setter
 public class UpdateOrderRequestDTO {
-
-    private String paymentProof;
-    private Long orderStatusId;
+//    private OrderStatusList newStatus;
+    private MultipartFile paymentProof;
 }

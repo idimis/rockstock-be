@@ -21,6 +21,6 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
     @Query("SELECT ci FROM CartItem ci WHERE ci.cart.id = :cartId AND ci.product.productName = :name AND ci.cart.isActive = true")
     Optional<CartItem> findByActiveCartIdAndProductName(Long cartId, String name);
 
-    @Query("SELECT ci FROM CartItem ci WHERE ci.cart.id = :cartId AND ci.id = : cartItemId")
+    @Query("SELECT ci FROM CartItem ci WHERE ci.cart.id = :cartId AND ci.id = :cartItemId")
     Optional<CartItem> findByIdAndCartId(Long cartItemId, Long cartId);
 }

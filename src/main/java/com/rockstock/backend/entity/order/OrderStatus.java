@@ -27,9 +27,9 @@ public class OrderStatus {
     @Column(name = "order_status_id", nullable = false)
     private Long id;
 
-    @NotNull
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Enum<OrderStatusList> status;
+    private OrderStatusList status;
 
     @NotNull
     @Column(nullable = false)

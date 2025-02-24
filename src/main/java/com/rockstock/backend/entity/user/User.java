@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.rockstock.backend.entity.cart.Cart;
 import com.rockstock.backend.entity.geolocation.Address;
 import com.rockstock.backend.entity.order.Order;
+import com.rockstock.backend.entity.warehouse.Warehouse;
 import com.rockstock.backend.entity.warehouse.WarehouseAdmin;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -44,9 +45,8 @@ public class User {
     @Column(nullable = false, unique = true, length = 100)
     private String email;
 
-    @NotNull(message = "Password is mandatory")
     @Size(min = 6, message = "Password must be at least 6 characters")
-    @Column(nullable = false)
+    @Column
     private String password;
 
     @Column(name = "profile_picture_url")
@@ -94,12 +94,16 @@ public class User {
     }
 
     // Relationships
-    @JsonBackReference
+//    @JsonBackReference
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    @JsonBackReference
+//    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+//    @JoinTable(name = "warehouse_admins", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "warehouse_id"))
+//    private Set<Warehouse> warehouses = new HashSet<>();
+
+//    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_provider_id", referencedColumnName = "user_provider_id")
     private UserProvider userProvider;
@@ -108,14 +112,14 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<UserRole> userRoles = new HashSet<>();
 
+    @JsonManagedReference
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<WarehouseAdmin> warehouseAdmins = new HashSet<>();
+
 //    @JsonManagedReference
 //    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 //    private Set<Address> addresses = new HashSet<>();
-//
-//    @JsonManagedReference
-//    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    private Set<WarehouseAdmin> warehouseAdmins = new HashSet<>();
-//
+
 //    @JsonManagedReference
 //    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 //    private Cart cart;

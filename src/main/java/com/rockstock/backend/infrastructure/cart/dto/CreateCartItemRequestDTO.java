@@ -14,11 +14,11 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class CreateCartItemRequestDTO {
 
-    @NotNull(message = "Quantity is required")
-    private BigDecimal quantity;
-
-    @NotNull(message = "Total amount is required")
-    private BigDecimal totalAmount;
+//    @NotNull(message = "Quantity is required")
+//    private BigDecimal quantity;
+//
+//    @NotNull(message = "Total amount is required")
+//    private BigDecimal totalAmount;
 
     @NotNull
     private Long productId;
@@ -26,8 +26,8 @@ public class CreateCartItemRequestDTO {
     public CartItem toEntity(Product product) {
         CartItem cartItem = new CartItem();
 
-        cartItem.setQuantity(quantity);
-        cartItem.setTotalAmount(totalAmount);
+//        cartItem.setQuantity(quantity);
+//        cartItem.setTotalAmount(totalAmount);
         cartItem.setProduct(product);
 
         return cartItem;

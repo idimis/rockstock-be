@@ -70,7 +70,7 @@ public class WarehouseStock {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-//    @JsonManagedReference
-//    @OneToMany(mappedBy = "warehouseStock", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    private Set<MutationJournal> mutationJournals = new HashSet<>();
+    @JsonManagedReference
+    @OneToMany(mappedBy = "warehouseStock", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<MutationJournal> mutationJournals = new HashSet<>();
 }

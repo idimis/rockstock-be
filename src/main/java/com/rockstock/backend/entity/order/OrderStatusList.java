@@ -2,9 +2,10 @@ package com.rockstock.backend.entity.order;
 
 public enum OrderStatusList {
     WAITING_FOR_PAYMENT,
-    WAITING_FOR_PAYMENT_CONFIRMATION,
+    PAYMENT_VERIFICATION,
     PROCESSING,
     ON_DELIVERY,
+    DELIVERED,
     COMPLETED,
     CANCELED
 }

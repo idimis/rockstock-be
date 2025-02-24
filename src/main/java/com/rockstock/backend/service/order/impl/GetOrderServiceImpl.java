@@ -2,9 +2,13 @@ package com.rockstock.backend.service.order.impl;
 
 import com.rockstock.backend.common.exceptions.DataNotFoundException;
 import com.rockstock.backend.entity.order.Order;
+import com.rockstock.backend.entity.order.OrderStatusList;
+import com.rockstock.backend.infrastructure.order.dto.GetOrderResponseDTO;
 import com.rockstock.backend.infrastructure.order.repository.OrderRepository;
+import com.rockstock.backend.infrastructure.user.auth.security.Claims;
 import com.rockstock.backend.service.order.GetOrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,67 +23,81 @@ public class GetOrderServiceImpl implements GetOrderService {
 
     @Override
     @Transactional
-    public List<Order> getAllOrder() {
-        return orderRepository.findAll();
+    public List<GetOrderResponseDTO> getFilteredOrders(Long warehouseId, OrderStatusList status) {
+        Long userId = Claims.getUserIdFromJwt();
+        String role = Claims.getRoleFromJwt();
+        List<Long> warehouseIds = Claims.getWarehouseIdsFromJwt();
+
+        List<Order> filteredOrders;
+
+        if ("Super Admin".equals(role) && warehouseId == null && status == null) {
+            filteredOrders = orderRepository.findAllWithDetails();
+        } else if ("Customer".equals(role)) {
+            filteredOrders = status != null
+                    ? orderRepository.findAllByUserIdAndOrderStatus(userId, status)
+                    : orderRepository.findAllByUserId(userId);
+        } else if (warehouseId != null) {
+            if ("Warehouse Admin".equals(role) && !warehouseIds.contains(warehouseId)) {
+                throw new AuthorizationDeniedException("You do not have access to this warehouse!");
+            }
+            filteredOrders = (status != null)
+                    ? orderRepository.findAllByWarehouseIdAndOrderStatus(warehouseId, status)
+                    : orderRepository.findAllByWarehouseId(warehouseId);
+        } else if (status != null && "Super Admin".equals(role)) {
+            filteredOrders = orderRepository.findAllByOrderStatus(status);
+        } else {
+            throw new IllegalArgumentException("Invalid filter combination");
+        }
+
+        if (filteredOrders.isEmpty()) {
+            throw new DataNotFoundException("No orders found!");
+        }
+
+        return filteredOrders.stream().map(GetOrderResponseDTO::new).toList();
     }
 
     @Override
     @Transactional
-    public List<Order> getAllByUserId(Long userId) {
-        List<Order> userOrders = orderRepository.findAllByUserId(userId);
-        if (userOrders.isEmpty()){
-            throw new DataNotFoundException("Order not found !");
+    public List<GetOrderResponseDTO> getAllByPaymentMethodName(String methodName) {
+        List<Order> orders = orderRepository.findAllByPaymentMethodName(methodName);
+        if (orders.isEmpty()) {
+            throw new DataNotFoundException("No orders found for payment method: " + methodName);
         }
-        return userOrders;
+        return orders.stream().map(GetOrderResponseDTO::new).toList();
     }
 
     @Override
     @Transactional
-    public List<Order> getAllByWarehouseId(Long warehouseId) {
-        List<Order> warehouseOrders = orderRepository.findAllByWarehouseId(warehouseId);
-        if (warehouseOrders.isEmpty()){
-            throw new DataNotFoundException("Order not found !");
-        }
-        return warehouseOrders;
-    }
+    public Optional<GetOrderResponseDTO> getByOrder(Long orderId, String orderCode) {
+        Long userId = Claims.getUserIdFromJwt();
+        String role = Claims.getRoleFromJwt();
+        List<Long> warehouseIds = Claims.getWarehouseIdsFromJwt();
 
-    @Override
-    @Transactional
-    public List<Order> getAllByUserIdAndOrderStatusName(Long userId, String statusName) {
-        List<Order> userOrdersByStatus = orderRepository.findAllByUserIdAndOrderStatusName(userId, statusName);
-        if (userOrdersByStatus.isEmpty()){
-            throw new DataNotFoundException("Order not found !");
-        }
-        return userOrdersByStatus;
-    }
+        Optional<Order> order = (orderId != null)
+                ? orderRepository.findById(orderId)
+                : orderRepository.findByOrderCode(orderCode);
 
-    @Override
-    @Transactional
-    public List<Order> getAllByWarehouseIdAndOrderStatusName(Long warehouseId, String statusName) {
-        List<Order> warehouseOrdersByStatus = orderRepository.findAllByWarehouseIdAndOrderStatusName(warehouseId, statusName);
-        if (warehouseOrdersByStatus.isEmpty()){
-            throw new DataNotFoundException("Order not found !");
+        if (order.isEmpty()) {
+            throw new DataNotFoundException("Order not found!");
         }
-        return warehouseOrdersByStatus;
-    }
 
-    @Override
-    @Transactional
-    public List<Order> getAllByPaymentMethodName(String methodName) {
-        List<Order> ordersByPaymentMethod = orderRepository.findAllByPaymentMethodName(methodName);
-        if (ordersByPaymentMethod.isEmpty()){
-            throw new DataNotFoundException("Order not found !");
-        }
-        return ordersByPaymentMethod;
-    }
+        Order foundOrder = order.get();
 
-    @Override
-    @Transactional
-    public Optional<Order> getById(Long orderId) {
-        Optional<Order> order = orderRepository.findById(orderId);
-        if (order.isEmpty()){
-            throw new DataNotFoundException("Order not found !");
+        // Customer can only access their own orders
+        if ("Customer".equals(role)) {
+            Optional<Order> userOwnsOrder = (orderId != null)
+                    ? orderRepository.findByIdAndUserId(orderId, userId)
+                    : orderRepository.findByOrderCodeAndUserId(orderCode, userId);
+            if (userOwnsOrder.isEmpty()) {
+                throw new AuthorizationDeniedException("You are not authorized to access this order!");
+            }
         }
-        return order;
+
+        // Warehouse Admin can only access orders from warehouses they manage
+        if ("Warehouse Admin".equals(role) && !warehouseIds.contains(foundOrder.getWarehouse().getId())) {
+            throw new AuthorizationDeniedException("You do not have access to this order!");
+        }
+
+        return Optional.of(new GetOrderResponseDTO(foundOrder));
     }
 }

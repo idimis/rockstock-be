@@ -4,6 +4,7 @@ import com.rockstock.backend.common.exceptions.DataNotFoundException;
 import com.rockstock.backend.common.exceptions.UnauthorizedException;
 import com.rockstock.backend.entity.cart.Cart;
 import com.rockstock.backend.entity.cart.CartItem;
+import com.rockstock.backend.infrastructure.cart.dto.GetCartItemResponseDTO;
 import com.rockstock.backend.infrastructure.cart.repository.CartItemRepository;
 import com.rockstock.backend.infrastructure.cart.repository.CartRepository;
 import com.rockstock.backend.infrastructure.user.auth.security.Claims;
@@ -26,7 +27,7 @@ public class GetCartItemServiceImpl implements GetCartItemService {
 
     @Override
     @Transactional
-    public List<CartItem> getAllByActiveCartId() {
+    public List<GetCartItemResponseDTO> getAllByActiveCartId() {
         Long userId = Claims.getUserIdFromJwt();
 
         Cart existingActiveCart = cartRepository.findActiveCartByUserId(userId);
@@ -39,12 +40,14 @@ public class GetCartItemServiceImpl implements GetCartItemService {
             throw new DataNotFoundException("Item not found !");
         }
 
-        return activeCartItems;
+        return activeCartItems.stream()
+                .map(GetCartItemResponseDTO::new)
+                .toList();
     }
 
     @Override
     @Transactional
-    public Optional<CartItem> getByActiveCartIdAndId(Long cartItemId) {
+    public Optional<GetCartItemResponseDTO> getByActiveCartIdAndId(Long cartItemId) {
         Long userId = Claims.getUserIdFromJwt();
 
         Cart existingActiveCart = cartRepository.findActiveCartByUserId(userId);
@@ -57,12 +60,12 @@ public class GetCartItemServiceImpl implements GetCartItemService {
             throw new DataNotFoundException("Cart item not found !");
         }
 
-        return currentCartItem;
+        return currentCartItem.map(GetCartItemResponseDTO::new);
     }
 
     @Override
     @Transactional
-    public Optional<CartItem> getByActiveCartIdAndProductId(Long productId) {
+    public Optional<GetCartItemResponseDTO> getByActiveCartIdAndProductId(Long productId) {
         Long userId = Claims.getUserIdFromJwt();
 
         Cart existingActiveCart = cartRepository.findActiveCartByUserId(userId);
@@ -75,12 +78,12 @@ public class GetCartItemServiceImpl implements GetCartItemService {
             throw new DataNotFoundException("Cart item not found !");
         }
 
-        return currentCartItem;
+        return currentCartItem.map(GetCartItemResponseDTO::new);
     }
 
     @Override
     @Transactional
-    public Optional<CartItem> getByActiveCartIdAndProductName(String name) {
+    public Optional<GetCartItemResponseDTO> getByActiveCartIdAndProductName(String name) {
         Long userId = Claims.getUserIdFromJwt();
 
         Cart existingActiveCart = cartRepository.findActiveCartByUserId(userId);
@@ -93,6 +96,6 @@ public class GetCartItemServiceImpl implements GetCartItemService {
             throw new DataNotFoundException("Cart item not found !");
         }
 
-        return currentCartItem;
+        return currentCartItem.map(GetCartItemResponseDTO::new);
     }
 }

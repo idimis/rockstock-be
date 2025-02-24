@@ -8,6 +8,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import lombok.extern.java.Log;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 @Log
@@ -44,7 +45,7 @@ public class Claims {
     }
 
     public static String getRoleFromJwt() {
-        Object roles = getClaimsFromJwt().get("scope");
+        Object roles = getClaimsFromJwt().get("roles");
         if (roles instanceof String) {
             return (String) roles;
         } else if (roles instanceof Collection) {
@@ -54,6 +55,19 @@ public class Claims {
                     .orElse(null);
         }
         return null;
+    }
+
+    public static List<Long> getWarehouseIdsFromJwt() {
+        Object warehouseIds = getClaimsFromJwt().get("warehouseIds");
+
+        if (warehouseIds instanceof Collection<?>) {
+            return ((Collection<?>) warehouseIds).stream()
+                    .filter(id -> id instanceof Number) // Ensure it's a number
+                    .map(id -> ((Number) id).longValue()) // Convert to Long
+                    .toList();
+        }
+
+        return List.of(); // Return an empty list if no warehouse IDs are found
     }
 
     public static String getTokenTypeFromJwt() {

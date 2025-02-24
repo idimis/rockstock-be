@@ -17,6 +17,8 @@ public class GetOrderItemResponseDTO {
     private BigDecimal price;
     private Long orderId;
     private Long productId;
+    private String productName;
+    private BigDecimal productWeight;
 
     public GetOrderItemResponseDTO(OrderItem orderItem) {
         this.orderItemId = orderItem.getId();
@@ -24,5 +26,7 @@ public class GetOrderItemResponseDTO {
         this.price = orderItem.getPrice();
         this.orderId = orderItem.getOrder().getId();
         this.productId = orderItem.getProduct().getId();
+        this.productName = orderItem.getProduct().getProductName();
+        this.productWeight = orderItem.getProduct().getWeight();
     }
 }

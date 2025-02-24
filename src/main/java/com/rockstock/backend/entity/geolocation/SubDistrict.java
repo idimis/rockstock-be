@@ -31,6 +31,10 @@ public class SubDistrict {
     @Column(nullable = false, length = 100)
     private String name;
 
+    @NotNull
+    @Column(name = "postal_code", nullable = false, length = 100)
+    private String postalCode;
+
     @Column(name = "deleted_at")
     private OffsetDateTime deletedAt;
 

@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class DeleteCartItemServiceImpl implements DeleteCartItemService {
@@ -31,5 +33,19 @@ public class DeleteCartItemServiceImpl implements DeleteCartItemService {
                 .orElseThrow(() -> new DataNotFoundException("Cart item not found!"));
 
         cartItemRepository.delete(deletedCartItem);
+    }
+
+    @Override
+    public void deleteByCartId(Long cartId) {
+        Long userId = Claims.getUserIdFromJwt();
+
+        Cart userActiveCart = cartRepository.findActiveCartByUserId(userId);
+
+        List<CartItem> userCartItems = cartItemRepository.findAllByActiveCartId(userActiveCart.getId());
+        if (userCartItems.isEmpty()) {
+            throw new DataNotFoundException("Cart item not found !");
+        }
+
+        cartItemRepository.deleteAll(userCartItems);
     }
 }

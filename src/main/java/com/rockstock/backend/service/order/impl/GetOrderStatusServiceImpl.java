@@ -2,6 +2,7 @@ package com.rockstock.backend.service.order.impl;
 
 import com.rockstock.backend.common.exceptions.DataNotFoundException;
 import com.rockstock.backend.entity.order.OrderStatus;
+import com.rockstock.backend.entity.order.OrderStatusList;
 import com.rockstock.backend.infrastructure.order.repository.OrderStatusRepository;
 import com.rockstock.backend.service.order.GetOrderStatusService;
 import lombok.RequiredArgsConstructor;
@@ -25,11 +26,13 @@ public class GetOrderStatusServiceImpl implements GetOrderStatusService {
 
     @Override
     @Transactional
-    public Optional<OrderStatus> getByOrderStatusName(String statusName) {
-        Optional<OrderStatus> orderStatus = orderStatusRepository.findByStatusName(statusName);
-        if (orderStatus.isEmpty()) {
-            throw new DataNotFoundException("Order status not found !");
+    public OrderStatus getByOrderStatusName(OrderStatusList status) {
+        OrderStatus orderStatus = orderStatusRepository.findByStatus(status);
+        if (orderStatus == null) {
+            throw new DataNotFoundException("Order status not found");
         }
         return orderStatus;
+
+
     }
 }

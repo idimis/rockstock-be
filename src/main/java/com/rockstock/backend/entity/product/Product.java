@@ -88,6 +88,10 @@ public class Product {
 
 //    @JsonManagedReference
 //    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private Set<OrderItem> orderItems = new HashSet<>();
+
+//    @JsonManagedReference
+//    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private Set<ProductPicture> productPictures = new HashSet<>();
 //
 //    @JsonManagedReference
@@ -97,8 +101,4 @@ public class Product {
 //    @JsonManagedReference
 //    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private Set<CartItem> cartItems = new HashSet<>();
-//
-//    @JsonManagedReference
-//    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private Set<OrderItem> orderItems = new HashSet<>();
 }

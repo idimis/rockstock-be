@@ -84,7 +84,7 @@ public class UpdateCartItemServiceImpl implements UpdateCartItemService {
 
         if (cartItem.getQuantity().compareTo(BigDecimal.ONE) == 0) {
             deleteCartItemService.removeCartItem(cartItem.getId());
-            throw new RuntimeException("Item removed from cart !");
+            return null;
         } else {
             cartItem.setQuantity(cartItem.getQuantity().subtract(BigDecimal.ONE));
             cartItem.setTotalAmount(cartItem.getQuantity().multiply(product.getPrice()));

@@ -1,4 +1,4 @@
-package com.rockstock.backend.common.util;
+package com.rockstock.backend.common.utils;
 
 import com.rockstock.backend.common.response.PaginatedResponse;
 import org.springframework.data.domain.Page;

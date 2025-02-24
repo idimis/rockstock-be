@@ -32,11 +32,6 @@ public class ProductPicture {
     @Column(nullable = false)
     private Integer position;
 
-    @NotNull
-    @ColumnDefault("false")
-    @Column(name = "is_main", nullable = false)
-    private Boolean isMain = false;
-
     @Column(name = "deleted_at")
     private OffsetDateTime deletedAt;
 

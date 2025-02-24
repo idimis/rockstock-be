@@ -1,4 +1,4 @@
-package com.rockstock.backend.common.util;
+package com.rockstock.backend.common.utils;
 
 import java.security.SecureRandom;
 import java.time.Instant;

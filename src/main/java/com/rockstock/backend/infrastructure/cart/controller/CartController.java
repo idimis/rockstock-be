@@ -2,8 +2,6 @@ package com.rockstock.backend.infrastructure.cart.controller;
 
 import com.rockstock.backend.common.response.ApiResponse;
 import com.rockstock.backend.infrastructure.cart.dto.CreateCartItemRequestDTO;
-import com.rockstock.backend.infrastructure.cart.dto.UpdateCartItemRequestDTO;
-import com.rockstock.backend.infrastructure.user.auth.security.Claims;
 import com.rockstock.backend.service.cart.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +35,7 @@ public class CartController {
     // Read / Get
     @GetMapping("/active")
     public ResponseEntity<?> getActiveCartByUserId() {
-        return ApiResponse.success(HttpStatus.OK.value(), "Get user's active cart success!", getCartService.getActiveCartByUserId(Claims.getUserIdFromJwt()));
+        return ApiResponse.success(HttpStatus.OK.value(), "Get user's active cart success!", getCartService.getActiveCartByUserId());
     }
 
     @GetMapping("/active/products")
@@ -76,5 +74,11 @@ public class CartController {
     public ResponseEntity<?> removeCartItem(@RequestParam Long cartItemId) {
         deleteCartItemService.removeCartItem(cartItemId);
         return ApiResponse.success("Item removed successfully!");
+    }
+
+    @DeleteMapping("/remove-all")
+    public ResponseEntity<?> deleteByCartId(@RequestParam Long cartId) {
+        deleteCartItemService.deleteByCartId(cartId);
+        return ApiResponse.success("All user cart items removed successfully!");
     }
 }
