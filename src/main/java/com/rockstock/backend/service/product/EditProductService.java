@@ -41,7 +41,7 @@ public class EditProductService {
         }
 
         if (editProductRequestDTO.getCategoryId() != null &&
-                (product.getProductCategory() == null || !editProductRequestDTO.getCategoryId().equals(product.getProductCategory().getCategoryId()))) {
+                (product.getProductCategory() == null || !editProductRequestDTO.getCategoryId().equals(product.getProductCategory().getId()))) {
 
             if (editProductRequestDTO.getCategoryId() == 1L) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot assign the default category.");
