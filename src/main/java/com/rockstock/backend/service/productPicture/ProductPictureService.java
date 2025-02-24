@@ -65,7 +65,7 @@ public class ProductPictureService {
         ProductPicture savedPicture = productPictureRepository.save(productPicture);
 
         return new CreateProductPictureResponseDTO(
-                savedPicture.getPictureId(),
+                savedPicture.getId(),
                 savedPicture.getProductPictureUrl(),
                 savedPicture.getPosition()
         );
@@ -100,7 +100,7 @@ public class ProductPictureService {
         ProductPicture updatedPicture = productPictureRepository.save(productPicture);
 
         return new UpdatePicturePositionResponseDTO(
-                updatedPicture.getPictureId(),
+                updatedPicture.getId(),
                 updatedPicture.getProductPictureUrl(),
                 updatedPicture.getPosition()
         );

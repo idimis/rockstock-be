@@ -54,7 +54,7 @@ public class UpdateProductService {
 
         // Update category only if a new category is provided and is different
         if (updateProductRequestDTO.getCategoryId() != null &&
-                (product.getProductCategory() == null || !updateProductRequestDTO.getCategoryId().equals(product.getProductCategory().getCategoryId()))) {
+                (product.getProductCategory() == null || !updateProductRequestDTO.getCategoryId().equals(product.getProductCategory().getId()))) {
 
             // Prevent assigning default category (ID = 1)
             if (updateProductRequestDTO.getCategoryId() == 1L) {
@@ -105,7 +105,7 @@ public class UpdateProductService {
                 && StringUtils.isNotBlank(product.getDetail()) && !product.getDetail().equals("This is a draft product.")
                 && product.getPrice() != null && product.getPrice().compareTo(BigDecimal.ZERO) > 0
                 && product.getWeight() != null && product.getWeight().compareTo(BigDecimal.ZERO) > 0
-                && product.getProductCategory() != null && product.getProductCategory().getCategoryId() != 1L
+                && product.getProductCategory() != null && product.getProductCategory().getId() != 1L
                 && hasMainImage;
     }
 

@@ -12,7 +12,7 @@ public interface ProductCategoryRepository extends JpaRepository<ProductCategory
     @Query("SELECT COUNT(pc) > 0 FROM ProductCategory pc WHERE LOWER(pc.categoryName) = LOWER(:categoryName) AND pc.deletedAt IS NULL")
     boolean existsByCategoryName(@Param("categoryName") String categoryName);
 
-    @Query("SELECT pc FROM ProductCategory pc WHERE pc.categoryId = :categoryId AND pc.deletedAt IS NULL")
+    @Query("SELECT pc FROM ProductCategory pc WHERE pc.Id = :categoryId AND pc.deletedAt IS NULL")
     Optional<ProductCategory> findByCategoryId(@Param("categoryId") Long categoryId);
 
     @Query("SELECT pc FROM ProductCategory pc WHERE pc.deletedAt IS NULL")

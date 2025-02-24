@@ -12,6 +12,7 @@ import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -49,14 +50,19 @@ public class TokenGenerationServiceImpl implements TokenGenerationService {
                 .map(userRole -> userRole.getRole().getName())
                 .collect(Collectors.joining(" "));
 
+        List<Long> warehouseIds = user.getWarehouseAdmins().stream()
+                .map(warehouseAdmin -> warehouseAdmin.getWarehouse().getId())
+                .toList();
+
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(expiry))
                 .subject(email)
-                .claim("scope", roles)
+                .claim("roles", roles)
+                .claim("warehouseIds", warehouseIds)
                 .claim("userId", user.getId())
                 .claim("type", tokenType.name())
-                .build();
+         .build();
 
         JwsHeader jwsHeader = JwsHeader.with(() -> "HS256").build();
         return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();

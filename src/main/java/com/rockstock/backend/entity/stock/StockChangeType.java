@@ -23,7 +23,7 @@ public class StockChangeType {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stock_change_type_id_gen")
     @SequenceGenerator(name = "stock_change_type_id_gen", sequenceName = "stock_change_type_id_seq", schema = "rockstock", allocationSize = 1)
     @Column(name = "stock_change_type_id", nullable = false)
-    private Long typeId;
+    private Long Id;
 
     @Column(name = "change_type", nullable = false)
     private String changeType;

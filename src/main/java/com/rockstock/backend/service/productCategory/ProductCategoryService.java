@@ -46,7 +46,7 @@ public class ProductCategoryService {
         ProductCategory savedCategory = productCategoryRepository.save(productCategory);
 
         return new CreateProductCategoryResponseDTO(
-                savedCategory.getCategoryId(),
+                savedCategory.getId(),
                 savedCategory.getCategoryName(),
                 savedCategory.getCategoryPicture()
         );
@@ -76,7 +76,7 @@ public class ProductCategoryService {
         ProductCategory updatedCategory = productCategoryRepository.save(productCategory);
 
         return new CreateProductCategoryResponseDTO(
-                updatedCategory.getCategoryId(),
+                updatedCategory.getId(),
                 updatedCategory.getCategoryName(),
                 updatedCategory.getCategoryPicture()
         );
@@ -103,7 +103,7 @@ public class ProductCategoryService {
         return productCategoryRepository.findAllActiveCategories()
                 .stream()
                 .map(category -> new HomeProductCategoryDTO(
-                        category.getCategoryId(),
+                        category.getId(),
                         category.getCategoryName(),
                         category.getCategoryPicture()))
                 .collect(Collectors.toList());
@@ -114,6 +114,6 @@ public class ProductCategoryService {
                 .orElseThrow(() -> new EntityNotFoundException("Product Category with ID " + categoryId + " not found"));
 
         // Return a DTO instead of the entity
-        return new GetProductCategoryResponseDTO(productCategory.getCategoryId(), productCategory.getCategoryName());
+        return new GetProductCategoryResponseDTO(productCategory.getId(), productCategory.getCategoryName());
     }
 }

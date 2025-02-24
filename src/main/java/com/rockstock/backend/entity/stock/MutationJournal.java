@@ -22,7 +22,7 @@ public class MutationJournal {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mutation_journal_id_gen")
     @SequenceGenerator(name = "mutation_journal_id_gen", sequenceName = "mutation_journal_id_seq", schema = "rockstock", allocationSize = 1)
     @Column(name = "mutation_journal_id", nullable = false)
-    private Long journalId;
+    private Long Id;
 
     @Column(name = "mutation_quantity", nullable = false)
     private Long mutationQuantity;

@@ -19,11 +19,11 @@ public interface WarehouseStockRepository extends JpaRepository<WarehouseStock, 
     Optional<WarehouseStock> findByProductAndWarehouse(@Param("product") Product product, @Param("warehouse") Warehouse warehouse);
 
     @Modifying
-    @Query("UPDATE WarehouseStock ws SET ws.deletedAt = :deletedAt WHERE ws.stockId = :stockId AND ws.deletedAt IS NULL")
+    @Query("UPDATE WarehouseStock ws SET ws.deletedAt = :deletedAt WHERE ws.Id = :stockId AND ws.deletedAt IS NULL")
     int softDelete(@Param("stockId") Long stockId, @Param("deletedAt") OffsetDateTime deletedAt);
 
     @Modifying
-    @Query("UPDATE WarehouseStock ws SET ws.deletedAt = NULL WHERE ws.stockId = :stockId AND ws.deletedAt IS NOT NULL")
+    @Query("UPDATE WarehouseStock ws SET ws.deletedAt = NULL WHERE ws.Id = :stockId AND ws.deletedAt IS NOT NULL")
     int restore(@Param("stockId") Long stockId);
 
     @Query("SELECT COUNT(ws) > 0 FROM WarehouseStock ws WHERE ws.product.id = :productId AND ws.warehouse.id = :warehouseId AND ws.deletedAt IS NULL")

@@ -23,7 +23,7 @@ public class MutationStatus {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mutation_status_id_gen")
     @SequenceGenerator(name = "mutation_status_id_gen", sequenceName = "mutation_status_id_seq", schema = "rockstock", allocationSize = 1)
     @Column(name = "mutation_status_id", nullable = false)
-    private Long statusId;
+    private Long Id;
 
     @Column(nullable = false)
     private String status;

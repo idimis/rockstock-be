@@ -26,7 +26,7 @@ public class WarehouseStock {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "warehouse_stock_id_gen")
     @SequenceGenerator(name = "warehouse_stock_id_gen", sequenceName = "warehouse_stock_id_seq", schema = "rockstock", allocationSize = 1)
     @Column(name = "warehouse_stock_id", nullable = false)
-    private Long stockId;
+    private Long Id;
 
     @Column(name = "stock_quantity", nullable = false)
     private Long stockQuantity;

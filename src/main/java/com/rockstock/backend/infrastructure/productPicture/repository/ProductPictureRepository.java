@@ -17,7 +17,7 @@ public interface ProductPictureRepository extends JpaRepository<ProductPicture, 
     @Query("SELECT CASE WHEN COUNT(pp) > 0 THEN TRUE ELSE FALSE END FROM ProductPicture pp WHERE pp.product.id = :productId AND pp.position = :position AND pp.deletedAt IS NULL")
     boolean existsByProductIdAndPosition(@Param("productId") Long productId, @Param("position") int position);
 
-    @Query("SELECT pp FROM ProductPicture pp WHERE pp.pictureId = :pictureId AND pp.product.id = :productId AND pp.deletedAt IS NULL ORDER BY pp.position ASC")
+    @Query("SELECT pp FROM ProductPicture pp WHERE pp.Id = :pictureId AND pp.product.id = :productId AND pp.deletedAt IS NULL ORDER BY pp.position ASC")
     Optional<ProductPicture> findByProductIdAndPictureId(@Param("productId") Long productId, @Param("pictureId") Long pictureId);
 
     @Query("SELECT pp FROM ProductPicture pp WHERE pp.product.id = :productId AND pp.position = :position AND pp.deletedAt IS NULL")
@@ -27,10 +27,10 @@ public interface ProductPictureRepository extends JpaRepository<ProductPicture, 
     List<ProductPicture> findAllByProductId(@Param("productId") Long productId);
 
     @Modifying
-    @Query("UPDATE ProductPicture pp SET pp.deletedAt = :deletedAt WHERE pp.pictureId = :pictureId AND pp.product.id = :productId")
+    @Query("UPDATE ProductPicture pp SET pp.deletedAt = :deletedAt WHERE pp.Id = :pictureId AND pp.product.id = :productId")
     int softDelete(@Param("productId") Long productId, @Param("pictureId") Long pictureId, @Param("deletedAt") OffsetDateTime deletedAt);
 
     @Modifying
-    @Query("UPDATE ProductPicture pp SET pp.deletedAt = NULL WHERE pp.pictureId = :pictureId AND pp.product.id = :productId AND pp.deletedAt IS NOT NULL")
+    @Query("UPDATE ProductPicture pp SET pp.deletedAt = NULL WHERE pp.Id = :pictureId AND pp.product.id = :productId AND pp.deletedAt IS NOT NULL")
     int restoreDeletedPicture(@Param("pictureId") Long pictureId, @Param("productId") Long productId);
 }

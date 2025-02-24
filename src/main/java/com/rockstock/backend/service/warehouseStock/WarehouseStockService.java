@@ -48,7 +48,7 @@ public class WarehouseStockService {
         WarehouseStock savedStock = warehouseStockRepository.save(newStock);
 
         return new WarehouseStockResponseDTO(
-                savedStock.getStockId(),
+                savedStock.getId(),
                 savedStock.getStockQuantity(),
                 product.getProductName(),
                 warehouse.getName()
