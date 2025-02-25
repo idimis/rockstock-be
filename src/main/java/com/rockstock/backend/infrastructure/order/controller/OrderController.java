@@ -1,5 +1,6 @@
 package com.rockstock.backend.infrastructure.order.controller;
 
+import com.midtrans.httpclient.error.MidtransError;
 import com.rockstock.backend.common.response.ApiResponse;
 import com.rockstock.backend.entity.order.OrderStatusList;
 import com.rockstock.backend.infrastructure.order.dto.CreateOrderRequestDTO;
@@ -30,7 +31,7 @@ public class OrderController {
 
     // Create
     @PostMapping
-    public ResponseEntity<?> createOrder(@Valid @RequestBody CreateOrderRequestDTO req) {
+    public ResponseEntity<?> createOrder(@Valid @RequestBody CreateOrderRequestDTO req) throws MidtransError {
         return ApiResponse.success(HttpStatus.OK.value(), "Create order success!", createOrderService.createOrder(req));
     }
 

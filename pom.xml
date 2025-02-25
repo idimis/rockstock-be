@@ -80,6 +80,12 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<!-- Midtrans for gateway payments -->
+		<dependency>
+			<groupId>com.midtrans</groupId>
+			<artifactId>java-library</artifactId>
+			<version>3.0.0</version>
+		</dependency>
 
 		<!-- Flyway Database Migration -->
 <!--		<dependency>-->

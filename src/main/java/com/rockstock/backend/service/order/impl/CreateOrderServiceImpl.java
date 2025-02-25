@@ -1,5 +1,6 @@
 package com.rockstock.backend.service.order.impl;
 
+import com.midtrans.httpclient.error.MidtransError;
 import com.rockstock.backend.common.exceptions.DataNotFoundException;
 import com.rockstock.backend.common.utils.OrderCodeGenerator;
 import com.rockstock.backend.common.utils.DistanceCalculator;
@@ -25,6 +26,7 @@ import com.rockstock.backend.infrastructure.warehouse.repository.WarehouseReposi
 import com.rockstock.backend.service.cart.DeleteCartItemService;
 import com.rockstock.backend.service.order.CreateOrderItemService;
 import com.rockstock.backend.service.order.CreateOrderService;
+import com.rockstock.backend.service.payment.MidtransPaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -47,10 +50,11 @@ public class CreateOrderServiceImpl implements CreateOrderService {
     private final CartItemRepository cartItemRepository;
     private final CreateOrderItemService createOrderItemService;
     private final DeleteCartItemService deleteCartItemService;
+    private final MidtransPaymentService midtransPaymentService;
 
     @Override
     @Transactional
-    public Order createOrder(CreateOrderRequestDTO req) {
+    public Order createOrder(CreateOrderRequestDTO req) throws MidtransError {
         Long userId = Claims.getUserIdFromJwt();
 
         User user = userRepository.findById(userId)
@@ -75,7 +79,7 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         Warehouse nearestWarehouse = findNearestWarehouse(address.getLatitude(), address.getLongitude());
         BigDecimal totalPrice = calculateTotalPrice(userId);
 
-        Order order = req.toEntity(address, paymentMethod);
+        Order order = req.toEntity(address);
 
         order.setDeliveryCost(req.getDeliveryCost());
         order.setTotalPrice(totalPrice);
@@ -91,7 +95,14 @@ public class CreateOrderServiceImpl implements CreateOrderService {
         String orderCode = OrderCodeGenerator.generateOrderCode(userId, savedOrder.getId(), LocalDate.now());
         savedOrder.setOrderCode(orderCode);
 
-        // Save order again with order code
+        if (paymentMethod.getName().equals("Manual Bank Transfer")) {
+            savedOrder.setPaymentMethod(paymentMethod);
+        } else {
+            midtransPaymentService.createTransactionToken(savedOrder.getId(), savedOrder.getTotalPayment().doubleValue());
+            savedOrder.setPaymentMethod(paymentMethod);
+        }
+
+        // Save order again with order code & payment method
         orderRepository.save(savedOrder);
 
         // Save order items for history

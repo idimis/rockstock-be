@@ -61,7 +61,7 @@ public class UpdateOrderServiceImpl implements UpdateOrderService {
                         throw new IllegalArgumentException("Payment proof required for manual bank transfer");
                     }
                 } else if (newStatus == OrderStatusList.PROCESSING) {
-                    if (!order.getPaymentMethod().getName().equals("Manual Bank Transfer") && isPaymentSuccessful(order)) {
+                    if (!order.getPaymentMethod().getName().equals("Manual Bank Transfer")) {
                         order.setOrderStatus(orderStatusRepository.findByStatus(newStatus));
 
                         // ADD AUTOMATIC STOCK MUTATION CODE HERE
@@ -107,8 +107,6 @@ public class UpdateOrderServiceImpl implements UpdateOrderService {
             case ON_DELIVERY -> {
                 if (userRole.equals("Customer") && newStatus == OrderStatusList.COMPLETED) {
                     order.setOrderStatus(orderStatusRepository.findByStatus(newStatus));
-                } else if (isDeliveryTimeExceeded(order)) {
-                    order.setOrderStatus(orderStatusRepository.findByStatus(newStatus));
                 } else {
                     throw new IllegalStateException("Order cannot be marked as completed yet");
                 }
@@ -121,10 +119,6 @@ public class UpdateOrderServiceImpl implements UpdateOrderService {
     private boolean isPaymentSuccessful(Order order) {
         // Implement actual payment gateway verification logic here
         return true; // Assume success for now
-    }
-
-    private boolean isDeliveryTimeExceeded(Order order) {
-        return OffsetDateTime.now().isAfter(order.getUpdatedAt().plusDays(2));
     }
 
     private boolean isValidFileType(MultipartFile file) {
