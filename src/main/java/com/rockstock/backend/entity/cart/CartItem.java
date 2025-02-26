@@ -28,7 +28,7 @@ public class CartItem {
 
     @NotNull
     @Column(nullable = false)
-    private BigDecimal quantity;
+    private Integer quantity;
 
     @NotNull
     @Column(nullable = false)

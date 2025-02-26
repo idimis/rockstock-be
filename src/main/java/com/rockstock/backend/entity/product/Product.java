@@ -51,6 +51,10 @@ public class Product {
     @Column(name = "total_stock", nullable = false, precision = 10)
     private BigDecimal totalStock;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ProductStatus status;
+
     @Column(name = "deleted_at")
     private OffsetDateTime deletedAt;
 
@@ -86,18 +90,18 @@ public class Product {
     @JoinColumn(name = "product_category_id", nullable = false)
     private ProductCategory productCategory;
 
+    @JsonManagedReference
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ProductPicture> productPictures = new HashSet<>();
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<WarehouseStock> stocks = new HashSet<>();
+
 //    @JsonManagedReference
 //    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private Set<OrderItem> orderItems = new HashSet<>();
 
-//    @JsonManagedReference
-//    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private Set<ProductPicture> productPictures = new HashSet<>();
-//
-//    @JsonManagedReference
-//    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private Set<WarehouseStock> stocks = new HashSet<>();
-//
 //    @JsonManagedReference
 //    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private Set<CartItem> cartItems = new HashSet<>();

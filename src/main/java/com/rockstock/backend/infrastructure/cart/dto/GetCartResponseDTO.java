@@ -12,11 +12,13 @@ public class GetCartResponseDTO {
 
     private Long cartId;
     private Boolean isActive;
+    private Integer itemQuantity;
     private Long userId;
 
     public GetCartResponseDTO(Cart cart) {
         this.cartId = cart.getId();
         this.isActive = cart.getIsActive();
+        this.itemQuantity = cart.getItemQuantity();
         this.userId = cart.getUser().getId();
     }
 }

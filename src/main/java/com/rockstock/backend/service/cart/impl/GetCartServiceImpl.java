@@ -6,6 +6,7 @@ import com.rockstock.backend.infrastructure.cart.repository.CartRepository;
 import com.rockstock.backend.infrastructure.user.auth.security.Claims;
 import com.rockstock.backend.service.cart.CreateCartService;
 import com.rockstock.backend.service.cart.GetCartService;
+import com.rockstock.backend.service.cart.UpdateCartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,7 @@ public class GetCartServiceImpl implements GetCartService {
 
     private final CartRepository cartRepository;
     private final CreateCartService createCartService;
+    private final UpdateCartService updateCartService;
 
     @Override
     @Transactional
@@ -26,6 +28,9 @@ public class GetCartServiceImpl implements GetCartService {
         if (existingActiveCart == null) {
             existingActiveCart = createCartService.createCart();
         }
+
+        updateCartService.updateItemQuantity();
+        
         return existingActiveCart;
     }
 }

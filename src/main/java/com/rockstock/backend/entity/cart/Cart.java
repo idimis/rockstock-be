@@ -32,6 +32,9 @@ public class Cart {
     @ColumnDefault("true")
     private Boolean isActive = true;
 
+    @Column(name = "item_quantity", nullable = false)
+    private Integer itemQuantity = 0;
+
     @NotNull
     @Column(name = "created_at", nullable = false)
     @ColumnDefault("CURRENT_TIMESTAMP")

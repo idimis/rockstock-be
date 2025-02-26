@@ -14,11 +14,13 @@ import java.time.OffsetDateTime;
 public class GetCartItemResponseDTO {
 
     private Long cartItemId;
-    private BigDecimal quantity;
+    private Integer quantity;
     private BigDecimal totalAmount;
     private OffsetDateTime deletedAt;
     private Long cartId;
     private Long productId;
+    private String productName;
+    private BigDecimal productPrice;
 
     public GetCartItemResponseDTO(CartItem cartItem) {
         this.cartItemId = cartItem.getId();
@@ -27,5 +29,7 @@ public class GetCartItemResponseDTO {
         this.deletedAt = cartItem.getDeletedAt();
         this.cartId = cartItem.getCart().getId();
         this.productId = cartItem.getProduct().getId();
+        this.productName = cartItem.getProduct().getProductName();
+        this.productPrice = cartItem.getProduct().getPrice();
     }
 }

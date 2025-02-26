@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 
 
 @Configuration
-public class MidtransConfig {
+public class RockstockMidtransConfig {
 
     @Value("${midtrans.server-key}")
     private String serverKey;

@@ -14,6 +14,7 @@ import com.rockstock.backend.infrastructure.product.repository.ProductRepository
 import com.rockstock.backend.infrastructure.user.auth.security.Claims;
 import com.rockstock.backend.service.cart.CreateCartItemService;
 import com.rockstock.backend.service.cart.CreateCartService;
+import com.rockstock.backend.service.cart.UpdateCartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +30,7 @@ public class CreateCartItemServiceImpl implements CreateCartItemService {
     private final ProductRepository productRepository;
     private final CartRepository cartRepository;
     private final CreateCartService createCartService;
+    private final UpdateCartService updateCartService;
 
     private Product getValidProduct(Long productId) {
         Product product = productRepository.findByIdAndDeletedAtIsNull(productId)
@@ -60,20 +62,24 @@ public class CreateCartItemServiceImpl implements CreateCartItemService {
         Optional<CartItem> existingItem = cartItemRepository.findByActiveCartIdAndProductId(existingActiveCart.getId(), product.getId());
         if (existingItem.isPresent()) {
             CartItem cartItem = existingItem.get();
-            if (cartItem.getQuantity().compareTo(product.getTotalStock()) >= 0) {
+            if (BigDecimal.valueOf(cartItem.getQuantity()).compareTo(product.getTotalStock()) >= 0) {
                 throw new StockLimitException("Hit stock limit !");
             }
 
-            cartItem.setQuantity(cartItem.getQuantity().add(BigDecimal.ONE));
-            cartItem.setTotalAmount(cartItem.getQuantity().multiply(product.getPrice()));
+            cartItem.setQuantity(cartItem.getQuantity() + req.getQuantity());
+            cartItem.setTotalAmount(BigDecimal.valueOf(cartItem.getQuantity()).multiply(product.getPrice()));
+
+            updateCartService.updateItemQuantity();
 
             return cartItemRepository.save(cartItem);
         } else {
             CartItem newItem = req.toEntity(product);
 
             newItem.setCart(existingActiveCart);
-            newItem.setQuantity(BigDecimal.ONE);
-            newItem.setTotalAmount(product.getPrice());
+            newItem.setQuantity(req.getQuantity());
+            newItem.setTotalAmount(BigDecimal.valueOf(req.getQuantity()).multiply(product.getPrice()));
+
+            updateCartService.updateItemQuantity();
 
             return cartItemRepository.save(newItem);
         }
