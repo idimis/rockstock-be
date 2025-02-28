@@ -14,5 +14,5 @@ public interface GetDistrictService {
     List<District> getDistrictsByCityId(Long cityId);
     List<District> getDistrictsByCityName(String name);
     Optional<District> getByDistrictId(Long districtId);
-    Optional<District> getByDistrictName(String name);
+    List<District> getByDistrictName(String name);
 }

@@ -63,11 +63,6 @@ public class PaymentMethod {
     }
 
     // Relationships
-    @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "payment_category_id", referencedColumnName = "payment_category_id")
-    private PaymentCategory paymentCategory;
-
 //    @JsonManagedReference
 //    @OneToMany(mappedBy = "paymentMethod", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 //    private Set<Order> orders = new HashSet<>();

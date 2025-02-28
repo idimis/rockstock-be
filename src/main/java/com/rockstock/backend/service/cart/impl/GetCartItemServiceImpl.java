@@ -38,7 +38,6 @@ public class GetCartItemServiceImpl implements GetCartItemService {
 
         List<CartItem> activeCartItems = cartItemRepository.findAllByActiveCartId(existingActiveCart.getId());
 
-        // If there are no items, return an empty list instead of throwing an error
         if (activeCartItems.isEmpty()) {
             return Collections.emptyList();
         }
@@ -47,7 +46,6 @@ public class GetCartItemServiceImpl implements GetCartItemService {
                 .map(GetCartItemResponseDTO::new)
                 .toList();
     }
-
 
     @Override
     @Transactional

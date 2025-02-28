@@ -57,8 +57,8 @@ public class GetCityServiceImpl implements GetCityService {
 
     @Override
     @Transactional
-    public Optional<City> getByCityName(String name) {
-        Optional<City> cityByName = cityRepository.findByNameContainingIgnoreCase(name);
+    public List<City> getByCityName(String name) {
+        List<City> cityByName = cityRepository.findByNameContainingIgnoreCase(name);
         if (cityByName.isEmpty()){
             throw new DataNotFoundException("City not found !");
         }

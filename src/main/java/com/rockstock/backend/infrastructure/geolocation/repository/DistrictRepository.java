@@ -22,5 +22,5 @@ public interface DistrictRepository extends JpaRepository<District, Long> {
     List<District> findByCityName(String name);
 
     @Query("SELECT d FROM District d WHERE d.name = :name")
-    Optional<District> findByNameContainingIgnoreCase(String name);
+    List<District> findByNameContainingIgnoreCase(String name);
 }

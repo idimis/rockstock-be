@@ -13,10 +13,12 @@ public class GetCityResponseDTO {
     private Long id;
     private String name;
     private Long provinceId;
+    private String provinceName;
 
     public GetCityResponseDTO(City city) {
         this.id = city.getId();
         this.name = city.getName();
         this.provinceId = city.getProvince().getId();
+        this.provinceName = city.getProvince().getName();
     }
 }

@@ -11,9 +11,6 @@ import java.util.Optional;
 @Repository
 public interface PaymentMethodRepository extends JpaRepository<PaymentMethod, Long> {
 
-    @Query("SELECT pm FROM PaymentMethod pm WHERE pm.paymentCategory.name = :categoryName")
-    List<PaymentMethod> findByPaymentCategoryName(String categoryName);
-
     @Query("SELECT pm FROM PaymentMethod pm WHERE pm.name = :methodName")
     Optional<PaymentMethod> findByPaymentMethodName(String methodName);
 }

@@ -25,16 +25,6 @@ public class GetPaymentMethodServiceImpl implements GetPaymentMethodService {
 
     @Override
     @Transactional
-    public List<PaymentMethod> getByPaymentCategoryName(String categoryName) {
-        List<PaymentMethod> paymentMethods = paymentMethodRepository.findByPaymentCategoryName(categoryName);
-        if (paymentMethods.isEmpty()){
-            throw new DataNotFoundException("Payment method not found !");
-        }
-        return paymentMethods;
-    }
-
-    @Override
-    @Transactional
     public Optional<PaymentMethod> getByPaymentMethodName(String methodName) {
         Optional<PaymentMethod> paymentMethod = paymentMethodRepository.findByPaymentMethodName(methodName);
         if (paymentMethod.isEmpty()){

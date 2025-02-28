@@ -7,6 +7,5 @@ import java.util.Optional;
 
 public interface GetPaymentMethodService {
     List<PaymentMethod> getAllPaymentMethod();
-    List<PaymentMethod> getByPaymentCategoryName(String categoryName);
     Optional<PaymentMethod> getByPaymentMethodName(String methodName);
 }

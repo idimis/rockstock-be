@@ -2,7 +2,6 @@ package com.rockstock.backend.infrastructure.payment.controller;
 
 import com.midtrans.httpclient.error.MidtransError;
 import com.rockstock.backend.common.response.ApiResponse;
-import com.rockstock.backend.service.payment.GetPaymentCategoryService;
 import com.rockstock.backend.service.payment.GetPaymentMethodService;
 import com.rockstock.backend.service.payment.MidtransPaymentService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +17,6 @@ import java.util.Map;
 public class PaymentController {
 
     private final MidtransPaymentService midtransPaymentService;
-    private final GetPaymentCategoryService getPaymentCategoryService;
     private final GetPaymentMethodService getPaymentMethodService;
 
     @PostMapping("/get-token")
@@ -42,24 +40,9 @@ public class PaymentController {
     }
 
     // Read / Get
-    @GetMapping("/categories")
-    public ResponseEntity<?> getAllPaymentCategory() {
-        return ApiResponse.success(HttpStatus.OK.value(), "Get all payment categories success!", getPaymentCategoryService.getAllPaymentCategory());
-    }
-
-    @GetMapping("/categories/name")
-    public ResponseEntity<?> getByPaymentCategoryName(@RequestParam String categoryName) {
-        return ApiResponse.success(HttpStatus.OK.value(), "Get payment category success!", getPaymentCategoryService.getByPaymentCategoryName(categoryName));
-    }
-
     @GetMapping("/methods")
     public ResponseEntity<?> getAllPaymentMethod() {
         return ApiResponse.success(HttpStatus.OK.value(), "Get all payment categories success!", getPaymentMethodService.getAllPaymentMethod());
-    }
-
-    @GetMapping("/methods/categories/name")
-    public ResponseEntity<?> getPaymentMethodByPaymentCategoryName(@RequestParam String categoryName) {
-        return ApiResponse.success(HttpStatus.OK.value(), "Get payment category success!", getPaymentMethodService.getByPaymentCategoryName(categoryName));
     }
 
     @GetMapping("/methods/name")

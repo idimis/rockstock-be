@@ -12,11 +12,9 @@ public class GetPaymentMethodResponseDTO {
 
     private Long paymentMethodId;
     private String name;
-    private Long paymentCategoryId;
 
     public GetPaymentMethodResponseDTO(PaymentMethod paymentMethod) {
         this.paymentMethodId = paymentMethod.getId();
         this.name = paymentMethod.getName();
-        this.paymentCategoryId = paymentMethod.getPaymentCategory().getId();
     }
 }

@@ -12,5 +12,5 @@ public interface GetCityService {
     List<City> getCitiesByProvinceId(Long provinceId);
     List<City> getCitiesByProvinceName(String name);
     Optional<City> getByCityId(Long cityId);
-    Optional<City> getByCityName(String name);
+    List<City> getByCityName(String name);
 }

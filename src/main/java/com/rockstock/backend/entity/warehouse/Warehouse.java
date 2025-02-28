@@ -87,17 +87,17 @@ public class Warehouse {
     @OneToMany(mappedBy = "warehouse", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<WarehouseAdmin> warehouseAdmins = new HashSet<>();
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "warehouse", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<WarehouseStock> warehouseStocks = new HashSet<>();
+//    @JsonManagedReference
+//    @OneToMany(mappedBy = "warehouse", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    private Set<WarehouseStock> warehouseStocks = new HashSet<>();
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "originWarehouse", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<MutationJournal> originMutationJournals = new HashSet<>();
+//    @JsonManagedReference
+//    @OneToMany(mappedBy = "originWarehouse", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    private Set<MutationJournal> originMutationJournals = new HashSet<>();
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "destinationWarehouse", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<MutationJournal> destinationMutationJournals = new HashSet<>();
+//    @JsonManagedReference
+//    @OneToMany(mappedBy = "destinationWarehouse", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    private Set<MutationJournal> destinationMutationJournals = new HashSet<>();
 
 //    @JsonManagedReference
 //    @OneToMany(mappedBy = "warehouse", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

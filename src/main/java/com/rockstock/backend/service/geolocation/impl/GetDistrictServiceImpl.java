@@ -77,8 +77,8 @@ public class GetDistrictServiceImpl implements GetDistrictService {
 
     @Override
     @Transactional
-    public Optional<District> getByDistrictName(String name) {
-        Optional<District> districtByName = districtRepository.findByNameContainingIgnoreCase(name);
+    public List<District> getByDistrictName(String name) {
+        List<District> districtByName = districtRepository.findByNameContainingIgnoreCase(name);
         if (districtByName.isEmpty()){
             throw new DataNotFoundException("District not found !");
         }
